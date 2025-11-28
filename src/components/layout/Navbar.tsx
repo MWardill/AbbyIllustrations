@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { FaInstagram, FaEtsy } from 'react-icons/fa';
 import { Image } from '../images';
 import { useScroll } from '../../hooks';
 import banner from '../../assets/Website_Banner_New.png';
@@ -19,6 +20,8 @@ export default function Navbar() {
                     ☰
                 </label>
             </div>
+            {/* Spacer to balance the social icons on large screens */}
+            <div className="hidden lg:flex flex-none w-28 pl-10"></div>
             <div className="flex-1 flex justify-center h-full pt-0 pb-2">
                 <Image
                     src={banner}
@@ -28,7 +31,14 @@ export default function Navbar() {
                     onClick={handleBannerClick}
                 />
             </div>
-            <div className="flex-none lg:hidden w-10"></div> {/* Spacer for centering */}
+            <div className="flex-none flex items-center gap-2 pr-4 lg:pr-10">
+                <a href="https://www.instagram.com/abbyillustrator/" target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-circle">
+                    <FaInstagram className="h-7 w-7" />
+                </a>
+                <a href="https://www.etsy.com/uk/shop/AbbysIllustrations" target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-circle">
+                    <FaEtsy className="h-7 w-7" />
+                </a>
+            </div>
         </div>
     )
 }
