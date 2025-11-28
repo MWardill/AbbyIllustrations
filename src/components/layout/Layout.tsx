@@ -79,10 +79,10 @@ export default function Layout() {
                     <input id="site-drawer" type="checkbox" className="drawer-toggle" />
 
                     <div ref={drawerContentRef} className="drawer-content flex flex-col bg-base-200/50 overflow-y-auto">
-                        <div ref={carouselRef} className="py-8 px-4">
+                        <div ref={carouselRef} className="pt-8 px-4">
                             <Carousel images={carouselImages} />
                         </div>
-                        <main className="min-h-screen p-6">
+                        <main className="min-h-screen px-6 pb-6">
                             <Outlet />
                         </main>
                     </div>

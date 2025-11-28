@@ -63,6 +63,18 @@ const madeImages = Object.entries(madeImageModules).map(([path, module]) => ({
 export default function Home() {
     return (
         <div className="min-h-[200vh]">
+            <div className="text-center pt-4 pb-6">
+                <h1 className="text-4xl font-bold mb-2">My Journey</h1>
+                <div className="flex justify-center">
+                    <div 
+                        className="h-1 w-64 bg-primary"
+                        style={{
+                            maskImage: 'linear-gradient(to right, transparent, black 20%, black 80%, transparent)',
+                            WebkitMaskImage: 'linear-gradient(to right, transparent, black 20%, black 80%, transparent)',
+                        }}
+                    />
+                </div>
+            </div>
             <Timeline>
                 {(activeIndex) => (
                     <>
