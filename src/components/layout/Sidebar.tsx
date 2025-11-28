@@ -14,15 +14,15 @@ export default function Sidebar() {
 
 
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className="h-screen flex flex-col overflow-hidden">
             {/* Top navbar - always visible */}
             <Navbar />
 
             {/* Drawer layout */}
-            <div className="drawer lg:drawer-open flex-1">
+            <div className="drawer lg:drawer-open flex-1 overflow-hidden" >
                 <input id="site-drawer" type="checkbox" className="drawer-toggle" />
 
-                <div className="drawer-content flex flex-col bg-base-200/50">
+                <div className="drawer-content flex flex-col bg-base-200/50 overflow-y-auto">
                     {/* Main content */}
                     <main className="flex-1 p-6">
                         <Outlet />

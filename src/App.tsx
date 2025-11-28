@@ -19,7 +19,7 @@ function App() {
           <Route path="/christmas-animals" element={<ChristmasAnimals />} />
           <Route path="/store" element={<Store />} />
         </Route>
-      </Routes>
+      </Routes>      
     </div>
   )
 
