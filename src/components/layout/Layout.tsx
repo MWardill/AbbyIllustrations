@@ -53,7 +53,7 @@ export default function Layout() {
         setTimeout(() => {
             if (carouselRef.current) {
                 const carouselHeight = carouselRef.current.offsetHeight;
-                smoothScrollTo(carouselHeight / 2, 700);
+                smoothScrollTo(carouselHeight / 1.3, 700);
             }
         }, 50);
     };

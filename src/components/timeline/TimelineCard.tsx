@@ -56,13 +56,14 @@ export default function TimelineCard({ images, title, children, objectPosition =
                     <div
                         key={index}
                         className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${
-                            index === currentIndex ? 'opacity-100' : 'opacity-0'
+                            index === currentIndex ? 'opacity-100' : 'opacity-0 pointer-events-none'
                         }`}
                     >
                         <Image
                             src={image.src}
                             alt={image.alt}
                             className={`w-full h-full object-cover ${objectPositionClass}`}
+                            expand
                         />
                     </div>
                 ))}
