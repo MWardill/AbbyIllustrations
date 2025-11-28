@@ -6,7 +6,7 @@ const christmasPhotos = Object.values(christmasPhotoModules) as string[];
 export default function ChristmasAnimals() {
   return (
     <ImageGallery title="Christmas Animals" photos={christmasPhotos}>
-      <p>Festive animal illustrations perfect for the holiday season.</p>
+      <p>Festive animal illustrations that I put together to produce a series of Christmas cards in my Etsy store</p>
     </ImageGallery>
   )
 }

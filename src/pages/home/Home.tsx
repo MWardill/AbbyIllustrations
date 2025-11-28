@@ -60,6 +60,19 @@ const madeImages = Object.entries(madeImageModules).map(([path, module]) => ({
     alt: path.split('/').pop()?.replace('.jpg', '').replace(/_/g, ' ') ?? 'Made image',
 }));
 
+// Wedding images
+const weddingImageModules = import.meta.glob<{ default: string }>(
+    '../../assets/wedding/*.{jpg,jpeg,png}',
+    { eager: true }
+);
+
+const weddingImages = Object.entries(weddingImageModules).map(([path, module]) => ({
+    src: module.default,
+    alt: path.split('/').pop()?.replace(/\.(jpg|jpeg|png)$/, '').replace(/_/g, ' ') ?? 'Wedding image',
+}));
+
+
+
 export default function Home() {
     return (
         <div className="min-h-[200vh] pb-50">
@@ -67,7 +80,7 @@ export default function Home() {
                 <h1 className="text-4xl font-bold mb-2">My Journey</h1>
                 <div className="flex justify-center">
                     <div
-                        className="h-1 w-64 bg-primary"
+                        className="h-1 w-64 bg-gray-300"
                         style={{
                             maskImage: 'linear-gradient(to right, transparent, black 20%, black 80%, transparent)',
                             WebkitMaskImage: 'linear-gradient(to right, transparent, black 20%, black 80%, transparent)',
@@ -87,7 +100,7 @@ export default function Home() {
                     year="2007"
                 >
                     <div className="timeline-box">I studied Illustration at the University of Lincoln</div>
-                </TimelineNode>                        
+                </TimelineNode>
                 <TimelineNode
                     position="start"
                     year="2011"
@@ -132,6 +145,19 @@ export default function Home() {
                     year="2016"
                 >
                     <TimelineCard
+                        images={weddingImages}
+                        title="Wedding"
+                        objectPosition='top'
+                    >
+                        <p>We got married! ❤️</p>
+                    </TimelineCard>
+                </TimelineNode>
+
+                <TimelineNode
+                    position="start"
+                    year="2016"
+                >
+                    <TimelineCard
                         images={companyImages}
                         title="Company Magazine"
                         objectPosition='top'
@@ -139,9 +165,9 @@ export default function Home() {
                         <p>I was chosen as the winner of Company Magazine's High Street Edit fashion illustrator competition. As a result, my work was featured throughout the issue and can be seen here.</p>
                     </TimelineCard>
                 </TimelineNode>
-                
+
                 <TimelineNode
-                    position="start"
+                    position="end"
                 >
                     <TimelineCard
                         images={madeImages}

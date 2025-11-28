@@ -14,7 +14,7 @@ export default function Navbar() {
     };
 
     return (
-        <div className="navbar bg-base-100 shadow-sm border-b border-base-200 h-28 lg:h-32 p-0 items-center">
+        <div className="navbar bg-base-100 shadow-md border-b border-base-200 h-28 lg:h-32 p-0 items-center z-50 relative">
             <div className="flex-none lg:hidden flex items-center">
                 <label htmlFor="site-drawer" className="btn btn-square btn-ghost">
                     ☰

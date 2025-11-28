@@ -10,6 +10,7 @@ import christmasImg from '../../assets/christmas-animals/Rabbit_Card_Abby_Wright
 import dogImg from '../../assets/dog-pictures/Abby_Wardill_Dog_Illustration_Smaller_1000.jpg';
 import fashionImg from '../../assets/fashion-illustrations/Anna_Calvi.jpg';
 import portraitImg from '../../assets/portraits/Greta_Thunberg_600.jpg';
+import petImg from '../../assets/pet-portraits/Cat_Abby_Wright.jpg';
 
 export default function Layout() {
     const navigate = useNavigate();
@@ -65,6 +66,7 @@ export default function Layout() {
 
     const carouselImages = [
         { src: dogImg, alt: "Dog Illustrations", eager: true, onClick: () => handleImageClick("/dog-portraits") },
+        { src: petImg, alt: "Pet Portraits", eager: true, onClick: () => handleImageClick("/pet-portraits") },
         { src: portraitImg, alt: "Portraits", eager: true, onClick: () => handleImageClick("/portraits") }, 
         { src: fashionImg, alt: "Fashion Illustrations", eager: true, onClick: () => handleImageClick("/fashion-images") }, 
         { src: babyImg, alt: "Baby Illustrations", eager: true, onClick: () => handleImageClick("/baby-portraits") },  

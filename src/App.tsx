@@ -10,6 +10,7 @@ import BabyPortraits from './pages/baby-portraits/BabyPortraits'
 import FashionImages from './pages/fashion-images/FashionImages'
 import AnimalImages from './pages/animal-images/AnimalImages'
 import Portraits from './pages/portraits/Portraits'
+import PetPortraits from './pages/pet-portraits/PetPortraits'
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
           <Route path="/fashion-images" element={<FashionImages />} />
           <Route path="/animal-images" element={<AnimalImages />} />
           <Route path="/portraits" element={<Portraits />} />
+          <Route path="/pet-portraits" element={<PetPortraits />} />
           <Route path="/store" element={<Store />} />
         </Route>
       </Routes>      
