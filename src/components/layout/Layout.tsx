@@ -1,5 +1,5 @@
-import { useCallback, useRef } from "react"
-import { Outlet, useNavigate } from "react-router-dom"
+import { useCallback, useRef, useState, useEffect } from "react"
+import { useNavigate, useOutlet, useLocation } from "react-router-dom"
 import Navbar from "./Navbar"
 import Sidebar from "./Sidebar"
 import { ScrollContext } from "../../hooks"
@@ -11,6 +11,36 @@ import dogImg from '../../assets/dog-pictures/Abby_Wardill_Dog_Illustration_Smal
 import fashionImg from '../../assets/fashion-illustrations/Anna_Calvi.jpg';
 import portraitImg from '../../assets/portraits/Greta_Thunberg_600.jpg';
 import petImg from '../../assets/pet-portraits/Cat_Abby_Wright.jpg';
+
+// Animated outlet component that handles fade transitions
+function AnimatedOutlet() {
+    const location = useLocation();
+    const currentOutlet = useOutlet();
+    const [displayedOutlet, setDisplayedOutlet] = useState(currentOutlet);
+    const [displayedPathname, setDisplayedPathname] = useState(location.pathname);
+    const [isVisible, setIsVisible] = useState(true);
+
+    useEffect(() => {
+        // Only animate if the pathname actually changed
+        if (location.pathname !== displayedPathname) {
+            setIsVisible(false);
+            const timeout = setTimeout(() => {
+                setDisplayedOutlet(currentOutlet);
+                setDisplayedPathname(location.pathname);
+                setIsVisible(true);
+            }, 300);
+            return () => clearTimeout(timeout);
+        }
+    }, [location.pathname, displayedPathname, currentOutlet]);
+
+    return (
+        <div 
+            className={`transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+        >
+            {displayedOutlet}
+        </div>
+    );
+}
 
 export default function Layout() {
     const navigate = useNavigate();
@@ -87,7 +117,7 @@ export default function Layout() {
                             <Carousel images={carouselImages} />
                         </div>
                         <main className="min-h-screen px-6 pb-6">
-                            <Outlet />
+                            <AnimatedOutlet />
                         </main>
                     </div>
 

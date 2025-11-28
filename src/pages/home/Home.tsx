@@ -125,7 +125,7 @@ export default function Home() {
                         images={observerImages}
                         title="The Observer Review: Books of the Year 2012."
                     >
-                        <p>I was commissioned by The Observer to create an illustration that would accompany a round up of the best books of 2012. You can read the article online here.</p>
+                        <p>I was commissioned by The Observer to create an illustration that would accompany a round up of the best books of 2012. You can read the article online <a href="https://www.theguardian.com/books/2012/nov/25/books-of-the-year-2012" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">here.</a></p>
                         <p className="mt-2">I was asked to illustrate a young woman reading in a winter scene and told to make the piece visually cold. I loved the opportunity to experiment with background elements, something I usually steer clear of.</p>
                     </TimelineCard>
                 </TimelineNode>

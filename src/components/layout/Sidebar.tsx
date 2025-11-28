@@ -2,15 +2,15 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { useScroll } from "../../hooks"
 
 const navItems = [
-    { to: "/", label: "Home" },
-    { to: "/about", label: "About" },
+    { to: "/", label: "Home" },    
     { to: "/dog-portraits", label: "Dog Portraits" },
     { to: "/pet-portraits", label: "Pet Portraits" },
     { to: "/baby-portraits", label: "Baby Portraits" },
     { to: "/fashion-images", label: "Fashion Images" },
     { to: "/animal-images", label: "Animal Images" },
     { to: "/christmas-animals", label: "Christmas Animals" },
-    { to: "https://www.etsy.com/uk/shop/AbbysIllustrations", label: "Shop", external: true }
+    { to: "https://www.etsy.com/uk/shop/AbbysIllustrations", label: "Shop", external: true },
+    { to: "/about", label: "About" },
 ];
 
 export default function Sidebar() {
