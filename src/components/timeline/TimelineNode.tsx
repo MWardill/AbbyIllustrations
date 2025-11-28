@@ -1,13 +1,16 @@
 interface TimelineNodeProps {
-    isActive: boolean;
     position: 'start' | 'end';
     year?: string;
-    children: React.ReactNode;
+    children?: React.ReactNode;
+    /** Automatically injected by Timeline */
+    isActive?: boolean;
+    /** Automatically injected by Timeline */
     isFirst?: boolean;
+    /** Automatically injected by Timeline */
     isLast?: boolean;
 }
 
-export default function TimelineNode({ isActive, position, year, children, isFirst = false, isLast = false }: TimelineNodeProps) {
+export default function TimelineNode({ isActive = false, position, year, children, isFirst = false, isLast = false }: TimelineNodeProps) {
     const positionClass = position === 'start' ? 'timeline-start md:text-end' : 'timeline-end md:text-start';
 
     return (

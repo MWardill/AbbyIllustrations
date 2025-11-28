@@ -86,7 +86,7 @@ export default function Carousel({
                 {images.map((image, index) => (
                     <div 
                         key={index} 
-                        className="carousel-item shrink-0"
+                        className="carousel-item shrink-0 relative group"
                         style={{
                             '--carousel-width-sm': `${itemWidth.sm}%`,
                             '--carousel-width-lg': `${itemWidth.lg}%`,
@@ -99,6 +99,9 @@ export default function Carousel({
                             eager={image.eager}
                             onClick={() => handleImageClick(index, image.onClick)}
                         />
+                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-base-100/80 px-3 py-1 rounded-full text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
+                            {image.alt}
+                        </div>
                     </div>
                 ))}
             </div>

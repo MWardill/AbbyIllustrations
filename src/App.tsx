@@ -9,6 +9,7 @@ import Store from './pages/store/Store'
 import BabyPortraits from './pages/baby-portraits/BabyPortraits'
 import FashionImages from './pages/fashion-images/FashionImages'
 import AnimalImages from './pages/animal-images/AnimalImages'
+import Portraits from './pages/portraits/Portraits'
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
           <Route path="/baby-portraits" element={<BabyPortraits />} />
           <Route path="/fashion-images" element={<FashionImages />} />
           <Route path="/animal-images" element={<AnimalImages />} />
+          <Route path="/portraits" element={<Portraits />} />
           <Route path="/store" element={<Store />} />
         </Route>
       </Routes>      

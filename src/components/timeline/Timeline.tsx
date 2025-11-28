@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback, Children, isValidElement, cloneElement } from 'react';
 
 interface TimelineProps {
-    children: (activeIndex: number) => React.ReactNode;
+    children: React.ReactNode;
 }
 
 export default function Timeline({ children }: TimelineProps) {
@@ -52,12 +52,22 @@ export default function Timeline({ children }: TimelineProps) {
         };
     }, [handleScroll]);
 
+    // Clone children and inject isActive, isFirst, isLast props automatically
+    const childArray = Children.toArray(children).filter(isValidElement);
+    const enhancedChildren = childArray.map((child, index) => {
+        return cloneElement(child, {
+            isActive: activeIndex >= index,
+            isFirst: index === 0,
+            isLast: index === childArray.length - 1,
+        } as Partial<unknown>);
+    });
+
     return (
         <ul
             ref={timelineRef}
             className="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical"
         >
-            {children(activeIndex)}
+            {enhancedChildren}
         </ul>
     );
 }
