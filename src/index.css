@@ -3,6 +3,23 @@
   themes: cupcake
 }
 
+/* Carousel responsive widths using CSS custom properties */
+.carousel-item {
+  width: 85%;
+}
+
+@media (min-width: 640px) {
+  .carousel-item {
+    width: var(--carousel-width-sm, 45%);
+  }
+}
+
+@media (min-width: 1024px) {
+  .carousel-item {
+    width: var(--carousel-width-lg, 28%);
+  }
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

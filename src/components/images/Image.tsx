@@ -7,6 +7,7 @@ interface ImageProps {
     eager?: boolean;
     srcSet?: string;
     sizes?: string;
+    onClick?: () => void;
 }
 
 export default function Image({
@@ -18,6 +19,7 @@ export default function Image({
     eager = false,
     srcSet,
     sizes,
+    onClick,
 }: ImageProps) {
     return (
         <img
@@ -31,6 +33,7 @@ export default function Image({
             fetchPriority={eager ? "high" : "auto"}
             srcSet={srcSet}
             sizes={sizes}
+            onClick={onClick}
         />
     );
 }
