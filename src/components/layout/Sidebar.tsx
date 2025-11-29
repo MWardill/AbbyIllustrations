@@ -18,7 +18,15 @@ export default function Sidebar() {
     const navigate = useNavigate()
     const { scrollToTop, scrollToContent } = useScroll()
 
+    const closeSidebar = () => {
+        const drawer = document.getElementById('site-drawer') as HTMLInputElement;
+        if (drawer) {
+            drawer.checked = false;
+        }
+    };
+
     const handleNavClick = (to: string) => {
+        closeSidebar();
         navigate(to);
         if (to === "/") {
             scrollToTop();
@@ -28,9 +36,9 @@ export default function Sidebar() {
     };
 
     return (
-        <div className="drawer-side z-40">
+        <div className="drawer-side z-50 lg:z-40">
             <label htmlFor="site-drawer" className="drawer-overlay"></label>
-            <aside className="w-64 min-h-full bg-base-100 shadow-inner pt-2">                 
+            <aside className="w-64 min-h-full bg-base-100 shadow-inner pt-16 lg:pt-2">                 
                 <ul className="menu p-4 gap-1">
                     {navItems.map((item) => (
                         <li key={item.to}>
@@ -40,6 +48,7 @@ export default function Sidebar() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="rounded-lg cursor-pointer hover:bg-base-200"
+                                    onClick={closeSidebar}
                                 >        
                                     {item.label}
                                 </a>
