@@ -1,12 +1,9 @@
 interface TimelineNodeProps {
     position: 'start' | 'end';
     year?: string;
-    children?: React.ReactNode;
-    /** Automatically injected by Timeline */
-    isActive?: boolean;
-    /** Automatically injected by Timeline */
-    isFirst?: boolean;
-    /** Automatically injected by Timeline */
+    children?: React.ReactNode;    
+    isActive?: boolean;    
+    isFirst?: boolean;    
     isLast?: boolean;
 }
 

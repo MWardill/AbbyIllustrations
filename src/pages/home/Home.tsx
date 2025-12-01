@@ -68,9 +68,19 @@ const weddingImageModules = import.meta.glob<{ default: string }>(
 
 const weddingImages = Object.entries(weddingImageModules).map(([path, module]) => ({
     src: module.default,
-    alt: path.split('/').pop()?.replace(/\.(jpg|jpeg|png)$/, '').replace(/_/g, ' ') ?? 'Wedding image',
+    alt: path.split('/').pop()?.replace(/\.(jpg|jpeg|png|JPG)$/, '').replace(/_/g, ' ') ?? 'Wedding image',
 }));
 
+
+const freckBlueModules = import.meta.glob<{ default: string }>(
+    '../../assets/frecklesblue/*.jpg',
+    { eager: true }
+);
+
+const freckBlueImages = Object.entries(freckBlueModules).map(([path, module]) => ({
+    src: module.default,
+    alt: path.split('/').pop()?.replace('.jpg', '').replace(/_/g, ' ') ?? 'Made image',
+}));
 
 
 export default function Home() {
@@ -91,7 +101,7 @@ export default function Home() {
             <Timeline>
                 <TimelineNode
                     position="start"
-                    year="1989"
+                    year="1988"
                 >
                     <div className="timeline-box">I was born</div>
                 </TimelineNode>
@@ -184,6 +194,20 @@ export default function Home() {
                             That brand is made - by the people for the people."</p>
 
                         <p className="mt-2">By off-setting the bright, bold and exciting pieces against neutral, raw and subtle colours, I hope that they become the main focus of the pieces.</p>
+                    </TimelineCard>
+                </TimelineNode>
+
+                <TimelineNode
+                    position="start"
+                    year="2020"
+                >
+                    <TimelineCard                        
+                        images={freckBlueImages}
+                        title="Freckles and Blue"
+                    >
+                        <p>In 2020, I illustrated my largest piece yet. Freckles and Blue were commissioned for a 40th birthday present.</p>
+
+                        <p className="mt-2">I worked more intricately than ever before and it took many hours of love, dedication and hard work to complete. It remains one of my favourite illustrations to date. We worked with a local arts printer to have it printed in A1 and it's now framed in the recipients’ living room, a special reminder of their beloved dogs.</p>                        
                     </TimelineCard>
                 </TimelineNode>
             </Timeline>

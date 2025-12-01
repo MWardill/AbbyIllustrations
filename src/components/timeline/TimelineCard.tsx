@@ -47,7 +47,7 @@ export default function TimelineCard({ images, title, children, objectPosition =
     }[objectPosition];
 
     return (
-        <div className="bg-base-100 shadow-sm w-full max-w-xl overflow-hidden rounded-lg">
+        <div className="bg-base-100 shadow-sm w-full md:min-w-120 max-w-xl overflow-hidden rounded-lg">
             <div
                 className="relative overflow-hidden"
                 style={{ aspectRatio: aspectRatio ?? 4 / 3 }}
