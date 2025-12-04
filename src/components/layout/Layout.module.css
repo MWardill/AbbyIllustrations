@@ -1,0 +1,42 @@
+.siteLogo {
+  font-family: "Playfair Display", Didot, "Bodoni MT", "Didot LT STD", serif;
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: baseline;
+  gap: 0.35em;
+  margin: 0;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.logoLeft {
+  color: #bdbdbd; /* light grey */
+  font-weight: 400;
+}
+
+/* three slim vertical bars */
+.logoBars {
+  position: relative;
+  width: 0.5em;
+  height: 1.1em;
+  display: inline-block;
+}
+
+.logoBars::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(#111, #111) 0% 0 / 18% 100% no-repeat,
+    linear-gradient(#111, #111) 41% 0 / 18% 100% no-repeat,
+    linear-gradient(#111, #111) 82% 0 / 18% 100% no-repeat;
+  opacity: 0.9;
+  border-radius: 2px;
+}
+
+.logoRight {
+  color: #111; /* near-black */
+  font-weight: 400;
+}
