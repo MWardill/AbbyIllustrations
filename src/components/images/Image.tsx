@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { createPortal } from 'react-dom';
 
 interface ImageProps {
@@ -27,19 +27,9 @@ export default function Image({
     expand = false,
 }: ImageProps) {
     const [isExpanded, setIsExpanded] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
-
-    useEffect(() => {
-        const checkMobile = () => {
-            setIsMobile(window.innerWidth < 768);
-        };
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
-    }, []);
 
     const handleClick = () => {
-        if (expand && !isMobile) {
+        if (expand) {
             setIsExpanded(true);
         }
         onClick?.();
@@ -49,7 +39,7 @@ export default function Image({
         setIsExpanded(false);
     };
 
-    const canExpand = expand && !isMobile;
+    const canExpand = expand;
 
     const expandedModal = isExpanded ? createPortal(
         <div 
