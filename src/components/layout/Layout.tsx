@@ -112,12 +112,16 @@ export default function Layout() {
                 <div className="drawer lg:drawer-open flex-1 overflow-hidden">
                     <input id="site-drawer" type="checkbox" className="drawer-toggle" />
 
-                    <div ref={drawerContentRef} className="drawer-content flex flex-col bg-base-200/50 overflow-y-auto">
+                    <div ref={drawerContentRef} className="drawer-content flex flex-col bg-base-200/50 overflow-y-auto relative">
                         <div ref={carouselRef} className="pt-8 px-4">
                             <Carousel images={carouselImages} />
                         </div>
                         <main className="min-h-screen px-6 pb-6">
                             <AnimatedOutlet />
+                            
+                            <div className="hidden md:block fixed bottom-2 right-3 text-[10px] text-gray-400/70 pointer-events-none select-none">
+                                v1.1
+                            </div>
                         </main>
                     </div>
 
