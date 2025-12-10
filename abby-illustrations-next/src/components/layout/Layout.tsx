@@ -78,12 +78,12 @@ export default function Layout({ children }: LayoutProps) {
             const neededBuffer = targetTop - maxScrollTop + 1;
             pendingTargetRef.current = targetTop;
             setScrollBuffer(current => {
-                if (Math.abs(current - neededBuffer) < 1) {                    
+                if (Math.abs(current - neededBuffer) < 1) {
                     requestAnimationFrame(() => smoothScrollTo(targetTop, 700));
                     return current;
                 }
                 return neededBuffer;
-            });            
+            });
         }, 50);
     }, [smoothScrollTo]);
 
@@ -123,7 +123,7 @@ export default function Layout({ children }: LayoutProps) {
 
     return (
         <ScrollContext.Provider value={{ scrollToTop, scrollToContent }}>
-             <div className="h-screen flex flex-col overflow-hidden">
+            <div className="h-screen flex flex-col overflow-hidden">
                 <Navbar />
 
                 <div className="drawer lg:drawer-open flex-1 overflow-hidden">
@@ -134,8 +134,10 @@ export default function Layout({ children }: LayoutProps) {
                             <Carousel images={carouselImages} />
                         </div>
                         <main className="min-h-screen px-6 pb-6">
-                            {children}
-                            
+                            <div className="route-children" style={{viewTransitionName: 'route-children'}}>
+                                {children}
+                            </div>
+
                             <div className="hidden md:block fixed bottom-2 right-3 text-[10px] px-10 text-gray-400/70 pointer-events-none select-none">
                                 v1.1
                             </div>

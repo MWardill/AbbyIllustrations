@@ -38,26 +38,31 @@ body {
 
 ::view-transition-old(root),
 ::view-transition-new(root) {
+  animation: none !important;
+}
+
+
+::view-transition-old(route-children),
+::view-transition-new(route-children) {
   animation-duration: 280ms;
   animation-timing-function: ease;
 }
 
-::view-transition-old(root) {
-  animation-name: vt-exit;
+::view-transition-old(route-children) {
+  animation-name: children-fade-out;
 }
 
-::view-transition-new(root) {
-  animation-name: vt-enter;
+::view-transition-new(route-children) {
+  animation-name: children-fade-in;
 }
 
-@keyframes vt-exit {
+@keyframes children-fade-out {
   from { opacity: 1; transform: translateY(0); }
   to   { opacity: 0; transform: translateY(-6px); }
 }
 
-@keyframes vt-enter {
+@keyframes children-fade-in {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
 
