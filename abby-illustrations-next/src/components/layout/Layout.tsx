@@ -139,7 +139,7 @@ export default function Layout({ children }: LayoutProps) {
                             </div>
 
                             <div className="hidden md:block fixed bottom-2 right-3 text-[10px] px-10 text-gray-400/70 pointer-events-none select-none">
-                                v1.1
+                                Next v1.1
                             </div>
                         </main>
                     </div>
