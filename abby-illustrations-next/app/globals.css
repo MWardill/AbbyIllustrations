@@ -1,0 +1,68 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+/* Carousel responsive widths using CSS custom properties */
+.carousel-item {
+  width: 85%;
+}
+
+@media (min-width: 640px) {
+  .carousel-item {
+    width: var(--carousel-width-sm, 45%);
+  }
+}
+
+@media (min-width: 1024px) {
+  .carousel-item {
+    width: var(--carousel-width-lg, 28%);
+  }
+}
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0 auto;
+  min-width: 320px;
+  min-height: 100vh;
+  padding: 0 0 0 1rem;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none !important;
+}
+
+
+::view-transition-old(route-children),
+::view-transition-new(route-children) {
+  animation-duration: 280ms;
+  animation-timing-function: ease;
+}
+
+::view-transition-old(route-children) {
+  animation-name: children-fade-out;
+}
+
+::view-transition-new(route-children) {
+  animation-name: children-fade-in;
+}
+
+@keyframes children-fade-out {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-6px); }
+}
+
+@keyframes children-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
