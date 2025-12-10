@@ -61,9 +61,9 @@ export default function Home({
                         title="V&A - Ultimate Yohji Illustration"
                         objectPosition='top'
                     >
-                        <p>I was commissioned by the Victoria and Albert Museum to produce my 'Ultimate Yohji' illustration.</p>
+                        <p>I was commissioned by the Victoria and Albert Museum to produce my &apos;Ultimate Yohji&apos; illustration.</p>
 
-                        <p className="mt-2"> My work, along with three others', was screen-printed onto tote bags at the Yohji Yamamoto at Play Friday Late event on the 27th May 2011. It was a dream commission!</p>
+                        <p className="mt-2"> My work, along with three others&apos;, was screen-printed onto tote bags at the Yohji Yamamoto at Play Friday Late event on the 27th May 2011. It was a dream commission!</p>
 
                         <p className="mt-2">As the illustration was produced with the intention of being screen-printed, I worked in a single colour, with no texture, shading or facial features. In doing this I had to change my working process which was enjoyable and challenging at the same time. I found this useful as it enabled me to adapt my work for different client needs.</p>
                     </TimelineCard>
@@ -113,7 +113,7 @@ export default function Home({
                         title="Company Magazine"
                         objectPosition='top'
                     >
-                        <p>I was chosen as the winner of Company Magazine's High Street Edit fashion illustrator competition. As a result, my work was featured throughout the issue and can be seen here.</p>
+                        <p>I was chosen as the winner of Company Magazine&apos;s High Street Edit fashion illustrator competition. As a result, my work was featured throughout the issue and can be seen here.</p>
                     </TimelineCard>
                 </TimelineNode>
 
@@ -128,11 +128,11 @@ export default function Home({
 
                         <p className="mt-2">All made products are designed by influential designers, then sourced and created within disadvantaged communities across East Africa.
 
-                            Following the principles of fair trade we train local artisans in new skills, providing fair wages and support at every level. Via this 'trade not aid' ethos we believe we can help break the cycle of poverty and empower the people who create our products.
+                            Following the principles of fair trade we train local artisans in new skills, providing fair wages and support at every level. Via this &apos;trade not aid&apos; ethos we believe we can help break the cycle of poverty and empower the people who create our products.
 
-                            The powerful concept behind made is the brainchild of Cristina Cisilino. Having spent many years in the world of fashion, Cristina's love of Africa, coupled with her belief in trade not aid, led her to join forces with partner Gerson Barnett. Together they have created an accessories brand with a conscience.
+                            The powerful concept behind made is the brainchild of Cristina Cisilino. Having spent many years in the world of fashion, Cristina&apos;s love of Africa, coupled with her belief in trade not aid, led her to join forces with partner Gerson Barnett. Together they have created an accessories brand with a conscience.
 
-                            That brand is made - by the people for the people."</p>
+                            That brand is made - by the people for the people.&quot;</p>
 
                         <p className="mt-2">By off-setting the bright, bold and exciting pieces against neutral, raw and subtle colours, I hope that they become the main focus of the pieces.</p>
                     </TimelineCard>
@@ -148,7 +148,7 @@ export default function Home({
                     >
                         <p>In 2020, I illustrated my largest piece yet. Freckles and Blue were commissioned for a 40th birthday present.</p>
 
-                        <p className="mt-2">I worked more intricately than ever before and it took many hours of love, dedication and hard work to complete. It remains one of my favourite illustrations to date. We worked with a local arts printer to have it printed in A1 and it's now framed in the recipients’ living room, a special reminder of their beloved dogs.</p>                        
+                        <p className="mt-2">I worked more intricately than ever before and it took many hours of love, dedication and hard work to complete. It remains one of my favourite illustrations to date. We worked with a local arts printer to have it printed in A1 and it&apos;s now framed in the recipients’ living room, a special reminder of their beloved dogs.</p>                        
                     </TimelineCard>
                 </TimelineNode>
             </Timeline>

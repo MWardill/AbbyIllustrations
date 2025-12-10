@@ -1,45 +1,28 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useTransitionRouter } from "next-view-transitions";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import { ScrollContext } from "../../hooks";
 import { Carousel } from "../images";
-import { AnimatePresence, motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 type LayoutProps = {
     children: React.ReactNode;
 };
 
+
 export default function Layout({ children }: LayoutProps) {
-    const router = useRouter();
+    const router = useTransitionRouter();
+    const pathname = usePathname();
+
     const drawerContentRef = useRef<HTMLDivElement>(null);
     const carouselRef = useRef<HTMLDivElement>(null);
 
-    const pathname = usePathname();
-
-    const [displayedChildren, setDisplayedChildren] = useState(children);
-    const [displayedPath, setDisplayedPath] = useState(pathname);
-    const [pendingChildren, setPendingChildren] = useState<React.ReactNode | null>(null);
-    const [pendingPath, setPendingPath] = useState<string | null>(null);
-    const [isAnimatingOut, setIsAnimatingOut] = useState(false);
-
-    /* eslint-disable react-hooks/set-state-in-effect */
-    useEffect(() => {
-        if (pathname === displayedPath || pathname === pendingPath) {
-            return;
-        }
-
-        // We intentionally trigger state updates here to queue the next page
-        // before the current one finishes its exit animation. This keeps the
-        // previous React tree mounted until AnimatePresence completes the
-        // transition.
-        setPendingChildren(children);
-        setPendingPath(pathname);
-        setIsAnimatingOut(true);
-    }, [children, pathname, displayedPath, pendingPath]);
-    /* eslint-enable react-hooks/set-state-in-effect */
+    const pendingScrollRef = useRef(false);
+    const pendingTargetRef = useRef<number | null>(null);
+    const [scrollBuffer, setScrollBuffer] = useState(0);
 
     // Custom smooth scroll with easing for a slower, smoother feel
     const smoothScrollTo = useCallback((targetTop: number, duration: number = 800) => {
@@ -49,6 +32,7 @@ export default function Layout({ children }: LayoutProps) {
         const startTop = container.scrollTop;
         const distance = targetTop - startTop;
         const startTime = performance.now();
+
 
         // Easing function: slow start, fast middle, slow end
         const easeInOutCubic = (t: number): number => {
@@ -74,18 +58,57 @@ export default function Layout({ children }: LayoutProps) {
         smoothScrollTo(0, 800);
     };
 
-    const scrollToContent = () => {
+    const scrollToContent = useCallback(() => {
         setTimeout(() => {
-            if (carouselRef.current) {
-                const carouselHeight = carouselRef.current.offsetHeight;
-                smoothScrollTo(carouselHeight / 1.3, 700);
+            const container = drawerContentRef.current;
+            const carousel = carouselRef.current;
+            if (!container || !carousel) return;
+
+            const carouselHeight = carousel.offsetHeight;
+            const targetTop = carouselHeight * (1 - 0.25);
+            const maxScrollTop = Math.max(0, container.scrollHeight - container.clientHeight);
+
+            if (maxScrollTop >= targetTop) {
+                pendingTargetRef.current = targetTop;
+                setScrollBuffer(0);
+                smoothScrollTo(targetTop, 700);
+                return;
             }
+
+            const neededBuffer = targetTop - maxScrollTop + 1;
+            pendingTargetRef.current = targetTop;
+            setScrollBuffer(current => {
+                if (Math.abs(current - neededBuffer) < 1) {                    
+                    requestAnimationFrame(() => smoothScrollTo(targetTop, 700));
+                    return current;
+                }
+                return neededBuffer;
+            });            
         }, 50);
-    };
+    }, [smoothScrollTo]);
+
+    useEffect(() => {
+        if (!pendingScrollRef.current) return;
+        pendingScrollRef.current = false;
+
+        const doc = document as Document & {
+            activeViewTransition?: ViewTransition;
+        };
+
+        const vt = doc.activeViewTransition;
+        if (vt?.finished) {
+            vt.finished.then(() => scrollToContent());
+            return;
+        }
+
+        // Fallback if API unavailable
+        requestAnimationFrame(() => scrollToContent());
+    }, [pathname, scrollToContent]);
+
 
     const handleImageClick = (path: string) => {
+        pendingScrollRef.current = true;
         router.push(path);
-        scrollToContent();
     };
 
     const carouselImages = [
@@ -100,7 +123,7 @@ export default function Layout({ children }: LayoutProps) {
 
     return (
         <ScrollContext.Provider value={{ scrollToTop, scrollToContent }}>
-            <div className="h-screen flex flex-col overflow-hidden">
+             <div className="h-screen flex flex-col overflow-hidden">
                 <Navbar />
 
                 <div className="drawer lg:drawer-open flex-1 overflow-hidden">
@@ -110,36 +133,13 @@ export default function Layout({ children }: LayoutProps) {
                         <div ref={carouselRef} className="pt-8 px-4">
                             <Carousel images={carouselImages} />
                         </div>
-                        <AnimatePresence
-                            mode="wait"
-                            initial={false}
-                            onExitComplete={() => {
-                                if (pendingChildren && pendingPath) {
-                                    setDisplayedChildren(pendingChildren);
-                                    setDisplayedPath(pendingPath);
-                                    setPendingChildren(null);
-                                    setPendingPath(null);
-                                }
-                                setIsAnimatingOut(false);
-                            }}
-                        >
-                            {!(isAnimatingOut && pendingChildren) && (
-                                <motion.main
-                                    key={displayedPath}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                                    className="min-h-screen px-6 pb-6"
-                                >
-                                    {displayedChildren}
-
-                                    <div className="hidden md:block fixed bottom-2 right-3 text-[10px] text-gray-400/70 pointer-events-none select-none">
-                                        v1.1
-                                    </div>
-                                </motion.main>
-                            )}
-                        </AnimatePresence>
+                        <main className="min-h-screen px-6 pb-6">
+                            {children}
+                            
+                            <div className="hidden md:block fixed bottom-2 right-3 text-[10px] px-10 text-gray-400/70 pointer-events-none select-none">
+                                v1.1
+                            </div>
+                        </main>
                     </div>
 
                     <Sidebar />

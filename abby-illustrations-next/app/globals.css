@@ -36,33 +36,28 @@ body {
   padding: 0 0 0 1rem;
 }
 
-/* Page transition animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 280ms;
+  animation-timing-function: ease;
 }
 
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
+::view-transition-old(root) {
+  animation-name: vt-exit;
 }
 
-.page-enter {
-  animation: fadeIn 0.8s ease-out forwards;
+::view-transition-new(root) {
+  animation-name: vt-enter;
 }
 
-.page-exit {
-  animation: fadeOut 0.8s ease-in forwards;
+@keyframes vt-exit {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-6px); }
 }
+
+@keyframes vt-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+

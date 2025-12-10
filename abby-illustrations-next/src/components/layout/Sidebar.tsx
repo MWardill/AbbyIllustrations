@@ -1,6 +1,6 @@
 "use client";
-
-import { usePathname, useRouter } from "next/navigation";
+import { useTransitionRouter } from "next-view-transitions";
+import { usePathname } from "next/navigation";
 import { useScroll } from "../../hooks"
 
 const navItems = [
@@ -17,7 +17,7 @@ const navItems = [
 
 export default function Sidebar() {
     const pathname = usePathname();
-    const router = useRouter();
+    const router = useTransitionRouter();
     const { scrollToTop, scrollToContent } = useScroll()
 
     const closeSidebar = () => {

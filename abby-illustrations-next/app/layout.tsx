@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Layout from "../src/components/layout/Layout";
+import { ViewTransitions } from "next-view-transitions";
 
 export const metadata: Metadata = {
   title: "Abby Illustrations",
@@ -13,10 +14,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-		<html lang="en" data-theme="cupcake">
-      <body>
-        <Layout>{children}</Layout>
-      </body>
-    </html>
+    <ViewTransitions>
+      <html lang="en" data-theme="cupcake">
+        <body>
+          <Layout>{children}</Layout>
+        </body>
+      </html>
+    </ViewTransitions>
   );
 }
