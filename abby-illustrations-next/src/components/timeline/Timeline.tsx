@@ -55,11 +55,7 @@ export default function Timeline({ children }: TimelineProps) {
 
     // Clone children and inject isActive, isFirst, isLast props automatically
     const childArray = Children.toArray(children).filter(isValidElement);
-    const enhancedChildren = childArray.map((child, index) => {        
-        if (typeof child.type === 'string') {
-            return child;
-        }
-
+    const enhancedChildren = childArray.map((child, index) => {                
         return cloneElement(child, {
             isActive: activeIndex >= index,
             isFirst: index === 0,

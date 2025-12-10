@@ -1,3 +1,4 @@
+'use client'
 interface TimelineNodeProps {
     position: 'start' | 'end';
     year?: string;
