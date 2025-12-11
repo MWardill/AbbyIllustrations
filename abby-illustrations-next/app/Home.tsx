@@ -19,7 +19,7 @@ const cincinattiImage: ImageInfo[] = [
   },
 ];
 
-export default function Home({
+export default async function Home({
   observerImages,
   companyImages,
   vaImages,
@@ -27,8 +27,9 @@ export default function Home({
   weddingImages,
   freckBlueImages,
 }: HomeProps) {
+
   return (
-    <div className="min-h-[200vh] pb-50">
+    <div className="min-h-[200vh] pb-50">       
       <div className="text-center pt-4 pb-6">
         <h1 className="text-4xl font-bold mb-2">My Journey</h1>
         <div className="flex justify-center">

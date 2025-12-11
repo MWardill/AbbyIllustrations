@@ -2,9 +2,11 @@
 import { useTransitionRouter } from "next-view-transitions";
 import { usePathname } from "next/navigation";
 import { useScroll } from "../../hooks"
+import { signIn, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 const navItems = [
-    { to: "/", label: "Home" },    
+    { to: "/", label: "Home" },
     { to: "/dog-portraits", label: "Dog Portraits" },
     { to: "/pet-portraits", label: "Pet Portraits" },
     { to: "/baby-portraits", label: "Baby Portraits" },
@@ -15,7 +17,9 @@ const navItems = [
     { to: "/about", label: "About" },
 ];
 
+
 export default function Sidebar() {
+    const { data: session } = useSession();
     const pathname = usePathname();
     const router = useTransitionRouter();
     const { scrollToTop, scrollToContent } = useScroll()
@@ -40,18 +44,18 @@ export default function Sidebar() {
     return (
         <div className="drawer-side z-50 lg:z-40">
             <label htmlFor="site-drawer" className="drawer-overlay"></label>
-            <aside className="w-64 min-h-full bg-base-100 shadow-inner pt-16 lg:pt-2">                 
+            <aside className="w-64 min-h-full bg-base-100 shadow-inner pt-16 lg:pt-2">
                 <ul className="menu p-4 gap-1">
                     {navItems.map((item) => (
                         <li key={item.to}>
                             {item.external ? (
-                                <a 
+                                <a
                                     href={item.to}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="rounded-lg cursor-pointer hover:bg-base-200"
                                     onClick={closeSidebar}
-                                >        
+                                >
                                     {item.label}
                                 </a>
                             ) : (
@@ -65,6 +69,26 @@ export default function Sidebar() {
                             )}
                         </li>
                     ))}
+                    <li>
+                        {!session ? (
+                            <button
+                                type="button"
+                                onClick={() => signIn("google", { callbackUrl: "/" })}
+                                className={`rounded-lg cursor-pointer text-left w-full hover:bg-base-200"}`}
+                            >
+                                Log In
+                            </button>
+                        ) : (
+                            <button
+                                type="button"
+                                onClick={() => signOut({ callbackUrl: "/" })}
+                                className={`rounded-lg cursor-pointer text-left w-full hover:bg-base-200"}`}
+                            >
+                                Log Out
+                            </button>
+                        )
+                        }
+                    </li>
                 </ul>
             </aside>
         </div>
