@@ -1,18 +1,12 @@
-import fs from 'fs';
-import path from 'path';
-import DogPortraits from '../../src/views/dog-portraits/DogPortraits';
-
-function getGalleryImages(folder: string) {
-  const dir = path.join(process.cwd(), 'public', folder);
-  const files = fs
-    .readdirSync(dir)
-    .filter((name) => ['.jpg', '.jpeg', '.png'].some((ext) => name.toLowerCase().endsWith(ext)));
-
-  return files.map((name) => `/${folder}/${name}`);
-}
+import { GalleryFileType, getGalleryImages } from '@/src/lib/fileUtils';
+import DogPortraits from './DogPortraits';
 
 export default function DogPortraitsPage() {
-  const photos = getGalleryImages('images/dog-pictures');
+  const photos = getGalleryImages('images/dog-pictures', [
+    GalleryFileType.JPG,
+    GalleryFileType.JPEG,
+    GalleryFileType.PNG,
+  ]);
 
   return <DogPortraits photos={photos} />;
 }

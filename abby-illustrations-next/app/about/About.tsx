@@ -35,8 +35,22 @@ export default function About() {
         <p className="pt-4">I have also written a tutorial, entitled &apos;smarten up your fashion drawings&apos; for Digital Arts Magazine and had my work featured in the magazine twice previously. I have been featured with Tea & Crayons in Digital Artist.</p>
 
         <p>I am available for commissions and collaborations</p>
-        <p>Please feel free to email me on <a href="mailto:abigail.wardill@gmail.com" className="text-primary hover:underline">abigail.wardill@gmail.com</a> / <a href="https://www.instagram.com/abbyillustrator/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Instagram @abbyillustrator</a></p>
+        <p>
+          Please feel free to email me on{' '}
+          <a href="mailto:abigail.wardill@gmail.com" className="text-primary hover:underline">
+            abigail.wardill@gmail.com
+          </a>{' '}
+          /{' '}
+          <a
+            href="https://www.instagram.com/abbyillustrator/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:underline"
+          >
+            Instagram @abbyillustrator
+          </a>
+        </p>
       </div>
     </div>
-  )
+  );
 }

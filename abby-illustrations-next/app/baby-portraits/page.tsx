@@ -1,18 +1,12 @@
-import fs from 'fs';
-import path from 'path';
-import BabyPortraits from '../../src/views/baby-portraits/BabyPortraits';
-
-function getGalleryImages(folder: string) {
-  const dir = path.join(process.cwd(), 'public', folder);
-  const files = fs
-    .readdirSync(dir)
-    .filter((name) => ['.jpg', '.jpeg', '.png'].some((ext) => name.toLowerCase().endsWith(ext)));
-
-  return files.map((name) => `/${folder}/${name}`);
-}
+import { GalleryFileType, getGalleryImages } from '@/src/lib/fileUtils';
+import BabyPortraits from './BabyPortraits';
 
 export default function BabyPortraitsPage() {
-  const photos = getGalleryImages('images/baby-pictures');
+  const photos = getGalleryImages('images/baby-pictures', [
+    GalleryFileType.JPG,
+    GalleryFileType.JPEG,
+    GalleryFileType.PNG,
+  ]);
 
   return <BabyPortraits photos={photos} />;
 }

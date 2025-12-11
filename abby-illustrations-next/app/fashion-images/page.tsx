@@ -1,18 +1,12 @@
-import fs from 'fs';
-import path from 'path';
-import FashionImages from '../../src/views/fashion-images/FashionImages';
-
-function getGalleryImages(folder: string) {
-  const dir = path.join(process.cwd(), 'public', folder);
-  const files = fs
-    .readdirSync(dir)
-    .filter((name) => ['.jpg', '.jpeg', '.png'].some((ext) => name.toLowerCase().endsWith(ext)));
-
-  return files.map((name) => `/${folder}/${name}`);
-}
+import { GalleryFileType, getGalleryImages } from '@/src/lib/fileUtils';
+import FashionImages from './FashionImages';
 
 export default function FashionImagesPage() {
-  const photos = getGalleryImages('images/fashion-illustrations');
+  const photos = getGalleryImages('images/fashion-illustrations', [
+    GalleryFileType.JPG,
+    GalleryFileType.JPEG,
+    GalleryFileType.PNG,
+  ]);
 
   return <FashionImages photos={photos} />;
 }

@@ -1,18 +1,12 @@
-import fs from 'fs';
-import path from 'path';
-import ChristmasAnimals from '../../src/views/christmas-animals/ChristmasAnimals';
-
-function getGalleryImages(folder: string) {
-  const dir = path.join(process.cwd(), 'public', folder);
-  const files = fs
-    .readdirSync(dir)
-    .filter((name) => ['.jpg', '.jpeg', '.png'].some((ext) => name.toLowerCase().endsWith(ext)));
-
-  return files.map((name) => `/${folder}/${name}`);
-}
+import { GalleryFileType, getGalleryImages } from '@/src/lib/fileUtils';
+import ChristmasAnimals from './ChristmasAnimals';
 
 export default function ChristmasAnimalsPage() {
-  const photos = getGalleryImages('images/christmas-animals');
+  const photos = getGalleryImages('images/christmas-animals', [
+    GalleryFileType.JPG,
+    GalleryFileType.JPEG,
+    GalleryFileType.PNG,
+  ]);
 
   return <ChristmasAnimals photos={photos} />;
 }

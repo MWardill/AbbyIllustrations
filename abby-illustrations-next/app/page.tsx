@@ -1,13 +1,13 @@
 import fs from 'fs';
 import path from 'path';
-import Home from '../src/views/home/Home';
+import Home from './Home';
+import type { ImageInfo } from '@/src/types/images';
+export type { ImageInfo } from '@/src/types/images';
 
-export type ImageInfo = {
-  src: string;
-  alt: string;
-};
-
-function getImagesFromFolder(relativeFolder: string, options?: { exts?: string[]; defaultAlt?: string }) {
+function getImagesFromFolder(
+  relativeFolder: string,
+  options?: { exts?: string[]; defaultAlt?: string },
+): ImageInfo[] {
   const { exts = ['.jpg', '.jpeg', '.png'], defaultAlt = 'Image' } = options || {};
   const dir = path.join(process.cwd(), 'public', relativeFolder);
 

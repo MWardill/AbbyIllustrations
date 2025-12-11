@@ -44,7 +44,7 @@ body {
 
 ::view-transition-old(route-children),
 ::view-transition-new(route-children) {
-  animation-duration: 280ms;
+  animation-duration: 380ms;
   animation-timing-function: ease;
 }
 

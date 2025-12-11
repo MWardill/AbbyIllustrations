@@ -1,4 +1,4 @@
-import Store from '../../src/views/store/Store';
+import Store from './Store';
 
 export default function StorePage() {
   return <Store />;

@@ -1,4 +1,4 @@
-import { ImageGallery } from '../../components/gallery';
+import { ImageGallery } from '@/src/components/gallery';
 
 interface DogPortraitsProps {
   photos: string[];
