@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
+import NextImage from 'next/image';
 
 interface ImageProps {
     src: string;
@@ -9,7 +10,6 @@ interface ImageProps {
     width?: number;
     height?: number;
     eager?: boolean;
-    srcSet?: string;
     sizes?: string;
     onClick?: () => void;
     expand?: boolean;
@@ -22,7 +22,6 @@ export default function Image({
     width,
     height,
     eager = false,
-    srcSet,
     sizes,
     onClick,
     expand = false,
@@ -48,10 +47,12 @@ export default function Image({
             onClick={handleClose}
         >
             <div className="relative max-w-[90vw] max-h-[90vh]">
-                <img
+                <NextImage
                     src={src}
                     alt={alt}
                     className="max-w-full max-h-[90vh] object-contain rounded-box"
+                    width={width || 800}
+                    height={height || 600}
                 />
                 <button
                     className="absolute -top-4 -right-4 btn btn-circle btn-sm"
@@ -67,16 +68,13 @@ export default function Image({
 
     return (
         <>
-            <img
+            <NextImage
                 src={src}
                 alt={alt}
-                width={width}
-                height={height}
+                width={width || 800}
+                height={height || 600}
                 className={`${className} ${canExpand ? 'cursor-pointer' : ''}`}
-                loading={eager ? "eager" : "lazy"}
-                decoding="async"
-                fetchPriority={eager ? "high" : "auto"}
-                srcSet={srcSet}
+                priority={eager}
                 sizes={sizes}
                 onClick={handleClick}
             />

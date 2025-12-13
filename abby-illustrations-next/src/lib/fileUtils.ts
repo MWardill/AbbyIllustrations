@@ -1,6 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 
+export const BLOB_BASE = 'https://7ec1rjem3s1walis.public.blob.vercel-storage.com'
+export function blobUrl(pathname: string) {
+  // pathname example: "art/foo.jpg"
+  return `${BLOB_BASE}/${pathname.replace(/^\//, '')}`;
+}
+
 export enum GalleryFileType {
   JPG = '.jpg',
   JPEG = '.jpeg',
