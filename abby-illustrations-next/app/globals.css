@@ -32,8 +32,7 @@
 body {
   margin: 0 auto;
   min-width: 320px;
-  min-height: 100vh;
-  padding: 0 0 0 1rem;
+  min-height: 100vh;  
 }
 
 ::view-transition-old(root),

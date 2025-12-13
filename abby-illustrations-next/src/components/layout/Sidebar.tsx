@@ -15,6 +15,7 @@ const navItems = [
     { to: "/christmas-animals", label: "Christmas Animals" },
     { to: "https://www.etsy.com/uk/shop/AbbysIllustrations", label: "Shop", external: true },
     { to: "/about", label: "About" },
+    { to: "/gallery-maint", label: "Gallery Maintenance", requiresAuth: true },
 ];
 
 
@@ -44,9 +45,14 @@ export default function Sidebar() {
     return (
         <div className="drawer-side z-50 lg:z-40">
             <label htmlFor="site-drawer" className="drawer-overlay"></label>
-            <aside className="w-64 min-h-full bg-base-100 shadow-inner pt-16 lg:pt-2">
+            <aside className="w-64 min-h-full bg-base-100 shadow-lg pt-16 lg:pt-2">
                 <ul className="menu p-4 gap-1">
-                    {navItems.map((item) => (
+                    {navItems.map((item) => {
+                        // Skip rendering if item requires auth and user is not logged in
+                        if (item.requiresAuth && !session) {
+                            return null;
+                        }
+                        return (
                         <li key={item.to}>
                             {item.external ? (
                                 <a
@@ -68,7 +74,8 @@ export default function Sidebar() {
                                 </button>
                             )}
                         </li>
-                    ))}
+                        );
+                    })}
                     <li>
                         {!session ? (
                             <button
