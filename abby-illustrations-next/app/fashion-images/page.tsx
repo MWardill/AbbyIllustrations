@@ -1,27 +1,24 @@
-import { list } from '@vercel/blob';
 import FashionImages from './FashionImages';
+import { db, imageMetadata } from '@/db';
+import { blobUrl } from '@/src/lib/fileUtils';
 
 export const revalidate = 300;
 
-const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png'];
 
 async function getFashionIllustrationPhotos() {
   try {
-    
-    let cursor;
-    const blobs = [];
 
-    do {
-      const { blobs: tempBlobs } = await list({ prefix: 'fashion-illustrations/', cursor });
-      blobs.push(...tempBlobs);
-      cursor = cursor;
-    } while (cursor);
+    const rows = await db
+    .select({
+      pathname: imageMetadata.pathname,
+      alt: imageMetadata.alt,
+      about: imageMetadata.about,
+      created_date: imageMetadata.createdDate,
+    })
+    .from(imageMetadata)
 
-    return blobs
-      .filter(({ pathname }) =>
-        ALLOWED_EXTENSIONS.some((extension) => pathname.toLowerCase().endsWith(extension)),
-      )
-      .map(({ url }) => (url));
+    return rows.map((row) =>(blobUrl(row.pathname)));
+   
   } catch (error) {
     console.error('Failed to load fashion illustration blobs', error);
     return [];

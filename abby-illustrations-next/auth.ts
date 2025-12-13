@@ -6,8 +6,6 @@ const allowedEmails =
   process.env.ALLOWED_EMAILS?.split(",").map((e) => e.trim()) ?? [];
 const allowedDomain = process.env.ALLOWED_DOMAIN;
 
-console.log("AUTH_GOOGLE_ID present?", !!process.env.AUTH_GOOGLE_ID);
-
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Google({
