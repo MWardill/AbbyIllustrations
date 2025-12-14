@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import Home from './Home';
+import Home from '../Home';
 import type { ImageInfo } from '@/src/types/images';
 export type { ImageInfo } from '@/src/types/images';
 
