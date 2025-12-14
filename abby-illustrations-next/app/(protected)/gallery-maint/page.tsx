@@ -1,20 +1,18 @@
-import { GalleryTable } from './GalleryTable';
 import { getGalleries } from './actions';
-import { Gallery } from './types';
+import GalleryMaint from './GalleryMaint';
 
 export default async function GalleryMaintPage() {
-  let galleries: Gallery[] = [];
-  let error = null;
 
-  try {
-    galleries = await getGalleries();
-  } catch (err) {
-    error = err instanceof Error ? err.message : 'Failed to fetch galleries';
-  }
+  const loadGalleries = async () => {
+    try {
+      return await getGalleries();
 
-  if (error) {
-    return <div className="p-8 text-red-600">Error: {error}</div>;
-  }
+    } catch (err) {
+      console.error('Failed to fetch galleries', err);
+    }
+  };
 
-  return <GalleryTable initialGalleries={galleries} />;
+  const galleries = await loadGalleries();
+  return (<GalleryMaint initialGalleries={galleries!} />);
+
 }

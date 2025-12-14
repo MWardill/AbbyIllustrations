@@ -6,6 +6,7 @@ interface ModalProps {
   description?: string;
   children: ReactNode;
   onClose: () => void;
+  footer?: ReactNode;
 }
 
 export default function Modal({ 
@@ -13,14 +14,15 @@ export default function Modal({
   title, 
   description, 
   children, 
-  onClose 
+  onClose,
+  footer
 }: ModalProps) {
   return (
     <dialog
       className="modal"
       open={isOpen}
     >
-      <div className="modal-box w-full max-w-md">
+      <div className="modal-box w-full max-w-xl">
         <button
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
           onClick={onClose}
@@ -39,12 +41,14 @@ export default function Modal({
         </div>
 
         <div className="modal-action">
-          <button
-            className="btn"
-            onClick={onClose}
-          >
-            Close
-          </button>
+          {footer ? footer : (
+            <button
+              className="btn"
+              onClick={onClose}
+            >
+              Close
+            </button>
+          )}
         </div>
       </div>
       <form method="dialog" className="modal-backdrop">
