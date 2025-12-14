@@ -1,14 +1,19 @@
 import { Gallery } from './types';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Edit } from 'lucide-react';
 
 interface GalleryTableProps {
   galleries: Gallery[];
-  onDelete?: (galleryId: number) => void | Promise<void>;
+  onEdit?: (galleryId: number) => void | Promise<void>;
+  onDelete?: (galleryId: number, galleryDesc: string) => void | Promise<void>;
 }
 
-export function GalleryTable({ galleries, onDelete }: GalleryTableProps) {
-  const handleDelete = async (galleryId: number) => {
-    await onDelete?.(galleryId);
+export function GalleryTable({ galleries, onEdit, onDelete }: GalleryTableProps) {
+  const handleEdit = (galleryId: number) => {
+    onEdit?.(galleryId);
+  };
+
+  const handleDelete = async (galleryId: number, galleryDesc: string) => {
+    await onDelete?.(galleryId, galleryDesc);
   };
   return (
     <>
@@ -28,14 +33,23 @@ export function GalleryTable({ galleries, onDelete }: GalleryTableProps) {
                 <td className="font-semibold">{gallery.gallery_title}</td>
                 <td>{gallery.gallery_description}</td>
                 <td className="text-right">{gallery.image_count}</td>
-                <td className="text-center">
-                  <button
-                    onClick={() => handleDelete(gallery.id)}
-                    className="btn btn-ghost btn-sm"
-                    title="Delete gallery"
-                  >
-                    <Trash2 className="h-4 w-4 text-red-600" />
-                  </button>
+                <td>
+                  <div className="flex justify-center gap-4">
+                    <button
+                      onClick={() => handleEdit(gallery.id)}
+                      className="btn btn-ghost btn-sm"
+                      title="Edit gallery images"
+                    >
+                      <Edit className="h-4 w-4 text-blue-600" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(gallery.id, gallery.gallery_title)}
+                      className="btn btn-ghost btn-sm"
+                      title="Delete gallery"
+                    >
+                      <Trash2 className="h-4 w-4 text-red-600" />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

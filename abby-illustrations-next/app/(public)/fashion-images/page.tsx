@@ -1,6 +1,6 @@
 import FashionImages from './FashionImages';
 import { db, imageMetadata } from '@/db';
-import { blobUrl } from '@/src/lib/fileUtils';
+import { blobUrl } from '@/src/lib/blobUtils';
 
 export const revalidate = 300;
 

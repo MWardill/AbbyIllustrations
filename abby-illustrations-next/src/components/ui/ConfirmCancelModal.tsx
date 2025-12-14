@@ -4,13 +4,14 @@ import { default as Modal } from './Modal';
 interface ConfirmCancelModalProps {
   isOpen: boolean;
   title: string;
-  description?: string;
+  description?: ReactNode;
   children?: ReactNode;
   onClose: () => void;
   onConfirm: () => void | Promise<void>;
   confirmText?: string;
   cancelText?: string;
   isDangerous?: boolean;
+  onTransitionEnd?: () => void;
 }
 
 export function ConfirmCancelModal({
@@ -23,6 +24,7 @@ export function ConfirmCancelModal({
   confirmText = 'Confirm',
   cancelText = 'Ok',
   isDangerous = false,
+  onTransitionEnd,
 }: ConfirmCancelModalProps) {
   return (
     <Modal
@@ -30,6 +32,7 @@ export function ConfirmCancelModal({
       title={title}
       description={description}
       onClose={onClose}
+      onTransitionEnd={onTransitionEnd}
       footer={
         <div className="flex justify-end gap-2">
           <button

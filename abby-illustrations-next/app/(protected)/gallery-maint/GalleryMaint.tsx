@@ -8,14 +8,14 @@ import { useRouter } from "next/navigation";
 import { deleteGallery } from './actions';
 
 export default function GalleryMaint({ initialGalleries }: { initialGalleries: Gallery[] }) {
-    const [showModal, setShowModal] = useState(false);
-    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [showModal, setShowModal] = useState(false);    
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState({show: false, description: ""});
     const [deleteGalleryId, setDeleteGalleryId] = useState<number | null>(null);
     const router = useRouter();
-
-    const handleDeleteGallery = async (galleryId: number) => {
+        
+    const handleDeleteGallery = async (galleryId: number, galleryDesc: string) => {
         setDeleteGalleryId(galleryId);
-        setShowDeleteConfirm(true);
+        setShowDeleteConfirm({show: true, description: galleryDesc});
     };
 
     const confirmDelete = async () => {
@@ -24,12 +24,12 @@ export default function GalleryMaint({ initialGalleries }: { initialGalleries: G
             console.log('gallery deleted', deleteGalleryId);
             router.refresh();
         }
-        setShowDeleteConfirm(false);
+        setShowDeleteConfirm({show: false, description: ""});
         setDeleteGalleryId(null);
     };
 
     const cancelDelete = () => {
-        setShowDeleteConfirm(false);
+        setShowDeleteConfirm({show: false, description: ""});
         setDeleteGalleryId(null);
     };
 
@@ -48,6 +48,7 @@ export default function GalleryMaint({ initialGalleries }: { initialGalleries: G
 
                 <GalleryTable
                     galleries={initialGalleries}
+                    onEdit={(id) => { router.push(`/image-maint/${id}`); }}
                     onDelete={handleDeleteGallery}
                 />
             </div>
@@ -59,11 +60,15 @@ export default function GalleryMaint({ initialGalleries }: { initialGalleries: G
                     router.refresh();
                 }}
             />
-
+   
             <ConfirmCancelModal
-                isOpen={showDeleteConfirm}
+                isOpen={showDeleteConfirm.show}
                 title="Delete Gallery"
-                description="Are you sure you want to delete this gallery?"
+                description={
+                    <>
+                        Are you sure you want to delete the gallery <strong>{showDeleteConfirm.description}</strong>?
+                    </>
+                }
                 onClose={cancelDelete}
                 onConfirm={confirmDelete}
                 confirmText="Delete"

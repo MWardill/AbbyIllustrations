@@ -1,9 +1,10 @@
 'use server';
 import { db, imageGalleries, imageGalleriesImages, imageMetadata } from '@/db';
-import { count } from 'drizzle-orm';
+import { count, InferSelectModel } from 'drizzle-orm';
 import { sql } from 'drizzle-orm';
 import { getDuplicateErrorMessage } from '../helpers';
 import { del } from '@vercel/blob';
+import { blobUrl } from '@/src/lib/blobUtils';
 
 export interface Gallery {
   id: number;
@@ -11,6 +12,8 @@ export interface Gallery {
   gallery_description: string;
   image_count: number;
 }
+
+export type GalleryImage = InferSelectModel<typeof imageMetadata>;
 
 export async function getGalleries(): Promise<Gallery[]> {
   try {
@@ -33,6 +36,25 @@ export async function getGalleries(): Promise<Gallery[]> {
   } catch (error) {
     console.error('Failed to fetch galleries:', error);
     throw new Error('Failed to fetch galleries');
+  }
+}
+
+export async function getGalleryImages(galleryId: number): Promise<GalleryImage[]> {
+  try {
+    const result = await db
+      .select()
+      .from(imageMetadata)
+      .innerJoin(
+        imageGalleriesImages,
+        sql`${imageMetadata.id} = ${imageGalleriesImages.imageId}`
+      )
+      .where(sql`${imageGalleriesImages.galleryId} = ${galleryId}`)
+      .orderBy(imageMetadata.pathname);
+
+    return result.map(row => row.image_metadata);
+  } catch (error) {
+    console.error('Failed to fetch gallery images:', error);
+    throw new Error('Failed to fetch gallery images');
   }
 }
 
@@ -70,32 +92,50 @@ export async function createGallery(title: string, description: string): Promise
 
 export async function deleteGallery(galleryId: number): Promise<void> {
   try {
-    //Delete the blob images - for now I think don't want to do this just in case
-    // const galleryImages = await db
-    //   .select({
-    //     pathname: imageMetadata.pathname,
-    //   })
-    //   .from(imageGalleriesImages)
-    //   .innerJoin(
-    //     imageMetadata,
-    //     sql`${imageGalleriesImages.imageId} = ${imageMetadata.id}`
-    //   )
-    //   .where(sql`${imageGalleriesImages.galleryId} = ${galleryId}`);
+    // Get all images associated with this gallery
+    const galleryImages = await db
+      .select({
+        id: imageMetadata.id,
+        pathname: imageMetadata.pathname,
+      })
+      .from(imageGalleriesImages)
+      .innerJoin(
+        imageMetadata,
+        sql`${imageGalleriesImages.imageId} = ${imageMetadata.id}`
+      )
+      .where(sql`${imageGalleriesImages.galleryId} = ${galleryId}`);
 
-    // // Delete images from blob storage
-    // for (const image of galleryImages) {
-    //   try {
-    //     await del(image.pathname);
-    //   } catch (error) {
-    //     console.warn(`Failed to delete blob for image ${image.pathname}:`, error);
-    //     // Continue deleting other images even if one fails
-    //   }
-    // }
+    // Delete images from blob storage and imageMetadata if they don't belong to other galleries
+    for (const image of galleryImages) {
+
+      const otherGalleryCount = await db
+        .select({ count: count() })
+        .from(imageGalleriesImages)
+        .where(
+          sql`${imageGalleriesImages.imageId} = ${image.id} AND ${imageGalleriesImages.galleryId} != ${galleryId}`
+        );
+
+      // If image is not used by other galleries, delete it
+      //For now this shouold never happen as I don't want to make a FE for it but would be good to support it in future maybe
+      if (otherGalleryCount[0].count === 0) {
+        try {
+          await del(blobUrl(image.pathname));
+        } catch (error) {
+          console.error(`Failed to delete blob for image ${image.pathname}:`, error);
+          throw error;
+        }
+
+        // Delete from imageMetadata
+        await db
+          .delete(imageMetadata)
+          .where(sql`${imageMetadata.id} = ${image.id}`);
+      }
+    }
 
     // Delete all image associations for this gallery
     await db
       .delete(imageGalleriesImages)
-      .where(sql`${imageGalleriesImages.galleryId} = ${galleryId}`);    
+      .where(sql`${imageGalleriesImages.galleryId} = ${galleryId}`);
 
     // Delete the gallery itself
     await db

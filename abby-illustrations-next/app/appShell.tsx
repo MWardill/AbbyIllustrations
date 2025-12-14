@@ -115,7 +115,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <ScrollContext.Provider value={value as any}>
+    <ScrollContext.Provider value={value}>
       <div className="h-screen flex flex-col overflow-hidden">
         <Navbar />
 

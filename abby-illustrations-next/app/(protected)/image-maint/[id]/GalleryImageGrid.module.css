@@ -1,0 +1,15 @@
+.gridContainer {
+  display: grid;
+  gap: 1rem;
+  padding: 0;
+  
+  /* Mobile: single column */
+  grid-template-columns: 1fr;
+  width: 100%;
+  
+  /* Tablet and up: use CSS variables for consistency */
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(var(--grid-cols, 3), 1fr);
+    width: var(--mid-width, 40%);
+  }
+}

@@ -33,7 +33,7 @@ export function GalleryModal({ isOpen, onClose, onSuccess }: GalleryModalProps) 
         setServerError(null);
 
         try {
-            const res = await fetch("/api/galleries", {
+            const res = await fetch("/api/protected/galleries", {
                 method: "POST",
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify(data),

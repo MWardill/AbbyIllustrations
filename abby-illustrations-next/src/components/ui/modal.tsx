@@ -3,10 +3,11 @@ import { ReactNode } from 'react';
 interface ModalProps {
   isOpen: boolean;
   title: string;
-  description?: string;
+  description?: ReactNode;
   children: ReactNode;
   onClose: () => void;
   footer?: ReactNode;
+  onTransitionEnd?: () => void;
 }
 
 export default function Modal({ 
@@ -15,14 +16,16 @@ export default function Modal({
   description, 
   children, 
   onClose,
-  footer
+  footer,
+  onTransitionEnd
 }: ModalProps) {
   return (
     <dialog
       className="modal"
       open={isOpen}
+      onTransitionEnd={onTransitionEnd}
     >
-      <div className="modal-box w-full max-w-xl">
+      <div className="modal-box w-full max-w-xl max-h-[90vh] flex flex-col">
         <button
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
           onClick={onClose}
@@ -33,14 +36,14 @@ export default function Modal({
         <h3 className="font-bold text-lg mb-4">{title}</h3>
         
         {description && (
-          <p className="text-sm text-gray-600 mb-4">{description}</p>
+          <div className="text-sm text-gray-600 mb-4">{description}</div>
         )}
 
-        <div className="py-4">
+        <div className="py-4 overflow-y-auto flex-1">
           {children}
         </div>
 
-        <div className="modal-action">
+        <div className="shrink-0 modal-action">
           {footer ? footer : (
             <button
               className="btn"
