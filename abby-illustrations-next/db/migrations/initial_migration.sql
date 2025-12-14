@@ -20,10 +20,38 @@ create table if not exists app.image_galleries (
 );
 
 create table if not exists app.image_galleries_images (
-    gallery_id int,
-    image_id int,
+    gallery_id int not null,
+    image_id int not null,
     primary key (gallery_id, image_id)
 );
+
+do $$ 
+begin
+  if not exists (
+    select 1 from information_schema.table_constraints 
+    where table_schema = 'app' 
+    and table_name = 'image_galleries_images' 
+    and constraint_name = 'fk_gallery_id'
+  ) then
+    alter table app.image_galleries_images
+      add constraint fk_gallery_id foreign key (gallery_id) references app.image_galleries (id) on delete cascade;
+  end if;
+end $$;
+
+do $$ 
+begin
+  if not exists (
+    select 1 from information_schema.table_constraints 
+    where table_schema = 'app' 
+    and table_name = 'image_galleries_images' 
+    and constraint_name = 'fk_image_id'
+  ) then
+    alter table app.image_galleries_images
+      add constraint fk_image_id foreign key (image_id) references app.image_metadata (id) on delete cascade;
+  end if;
+end $$;
+
+
   
 insert into app.image_galleries (gallery_title, gallery_description)
 values
