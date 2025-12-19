@@ -5,6 +5,7 @@ create table if not exists app.image_metadata (
   pathname text not null,
   alt text not null,
   about text,
+  author text default 'Abigail Wright',
   created_date date,
   updated_at timestamptz not null default now()
 );

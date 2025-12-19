@@ -7,6 +7,7 @@ export const imageMetadata = appSchema.table('image_metadata', {
   pathname: text().notNull().unique(),
   alt: text().notNull(),
   about: text(),
+  author: text().default('Abigail Wright'),
   createdDate: date('created_date'),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });

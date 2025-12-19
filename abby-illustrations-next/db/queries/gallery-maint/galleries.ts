@@ -146,3 +146,20 @@ export async function deleteGallery(galleryId: number): Promise<void> {
     throw new Error('Failed to delete gallery');
   }
 }
+
+export async function updateImage(id: number, data: Partial<GalleryImage>) {
+  try {
+    await db.update(imageMetadata)
+      .set({
+        alt: data.alt,
+        about: data.about,
+        author: data.author,
+        createdDate: data.createdDate,
+        updatedAt: new Date(),
+      })
+      .where(sql`${imageMetadata.id} = ${id}`);
+  } catch (error) {
+    console.error('Failed to update image:', error);
+    throw new Error('Failed to update image');
+  }
+}
