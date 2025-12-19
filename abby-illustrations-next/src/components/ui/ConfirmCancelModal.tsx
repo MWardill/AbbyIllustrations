@@ -22,7 +22,7 @@ export function ConfirmCancelModal({
   onClose,
   onConfirm,
   confirmText = 'Confirm',
-  cancelText = 'Ok',
+  cancelText = 'Cancel',
   isDangerous = false,
   onTransitionEnd,
 }: ConfirmCancelModalProps) {

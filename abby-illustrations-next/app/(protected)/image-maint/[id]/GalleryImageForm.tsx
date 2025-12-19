@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { GalleryImage } from '@/db/queries/gallery-maint/galleries';
@@ -9,15 +9,19 @@ import { blobUrl } from '@/src/lib/blobUtils';
 import styles from './GalleryImageGrid.module.css';
 import { galleryImageSchema, type GalleryImageFormData } from './validation';
 import { Input } from '@/src/components/form/Input';
+import { Trash2 } from 'lucide-react';
+import { ConfirmCancelModal } from '@/src/components/ui/ConfirmCancelModal';
 
 interface GalleryImageFormProps {
     image: GalleryImage;
     shouldSlideOut: boolean;
     onSave: (formData: Partial<GalleryImage>) => Promise<void>;
+    onDelete: () => Promise<void>;
     onCancel: () => void;
 }
 
-export function GalleryImageForm({ image, shouldSlideOut, onSave, onCancel }: GalleryImageFormProps) {
+export function GalleryImageForm({ image, shouldSlideOut, onSave, onDelete, onCancel }: GalleryImageFormProps) {
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const {
         register,
         handleSubmit,
@@ -105,8 +109,15 @@ export function GalleryImageForm({ image, shouldSlideOut, onSave, onCancel }: Ga
                             </label>
                         </div>
 
-                        <div className="mt-2">
+                        <div className="mt-2 flex justify-between items-center">                            
                             <p className="text-gray-500 text-xs">Updated: {new Date(image.updatedAt).toLocaleDateString()}</p>
+                            <button 
+                                type="button" 
+                                className="btn btn-ghost btn-sm text-error"
+                                onClick={() => setIsDeleteModalOpen(true)}
+                            >
+                                <Trash2 className="h-4 w-4" />
+                            </button>                                                                
                         </div>
 
                         <div className="flex gap-2 mt-2 w-full">
@@ -124,6 +135,20 @@ export function GalleryImageForm({ image, shouldSlideOut, onSave, onCancel }: Ga
                     </form>
                 </div>
             </div>
+
+            {/* Delete Confirmation Modal */}
+            <ConfirmCancelModal
+                isOpen={isDeleteModalOpen}
+                title="Delete Image"
+                description="Are you sure you want to delete this image? This action cannot be undone."
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={async () => {
+                    await onDelete();
+                    setIsDeleteModalOpen(false);
+                }}
+                confirmText="Delete"
+                isDangerous={true}
+            />
         </div>
     );
 }

@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import type { GalleryImage } from '@/db/queries/gallery-maint/galleries';
+import { type GalleryImage } from '@/db/queries/gallery-maint/galleries';
+import { updateGalleryImage, deleteGalleryImage } from '../actions';
 import { toast } from "sonner";
 import { handleError } from '@/src/lib/errorUtils';
 import { GalleryImageForm } from './GalleryImageForm';
@@ -33,10 +34,23 @@ export function GalleryImageMaint({ images }: GalleryImageMaintProps) {
         if (!selectedImage) return;
 
         try {
-            //await updateImage(selectedImage.id, formData);                    
+            await updateGalleryImage(selectedImage.id, formData);                    
             router.refresh();
             toast.success("Image updated successfully");
             setSelectedImage({ ...selectedImage, ...formData, updatedAt: new Date() } as GalleryImage);
+        } catch (error) {
+            handleError(error);
+        }
+    };
+
+    const handleDelete = async () => {
+        if (!selectedImage) return;
+
+        try {
+            await deleteGalleryImage(selectedImage.id);
+            router.refresh();
+            toast.success("Image deleted successfully");
+            setSelectedImage(null);
         } catch (error) {
             handleError(error);
         }
@@ -59,6 +73,7 @@ export function GalleryImageMaint({ images }: GalleryImageMaintProps) {
                     image={selectedImage}
                     shouldSlideOut={shouldSlideOut}
                     onSave={handleSave}
+                    onDelete={handleDelete}
                     onCancel={() => setSelectedImage(null)}
                 />
             )}

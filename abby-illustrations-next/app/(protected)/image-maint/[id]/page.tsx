@@ -1,6 +1,8 @@
 import { getGalleryImages } from '../actions';
 import { GalleryImageMaint } from './GalleryImageMaint';
-import { BackButton } from './BackButton';
+import { BackButton } from '@/src/components/ui/BackButton';
+import Link from 'next/link';
+import { Plus } from 'lucide-react';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -18,7 +20,13 @@ export default async function Page({ params }: PageProps) {
         <h1 className="text-2xl font-bold">
           Edit images for gallery
         </h1>
-        <BackButton />
+        <div className="flex items-center gap-4">
+          <Link href={`/image-maint/${id}/add-image`} className="btn btn-primary btn-sm gap-4" title="Add new image to gallery">
+            <Plus className="h-4 w-4" />
+            Add Image
+          </Link>
+          <BackButton text= "Return to Gallery Maintenance"  />
+        </div>
       </div>
       
       <GalleryImageMaint images={images} />
