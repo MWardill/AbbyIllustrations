@@ -155,6 +155,7 @@ export async function updateImage(id: number, data: Partial<GalleryImage>) {
         about: data.about,
         author: data.author,
         createdDate: data.createdDate,
+        primaryImage: data.primaryImage,
         updatedAt: new Date(),
       })
       .where(sql`${imageMetadata.id} = ${id}`);

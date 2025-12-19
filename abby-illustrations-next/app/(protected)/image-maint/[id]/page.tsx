@@ -1,5 +1,5 @@
 import { getGalleryImages } from '../actions';
-import { GalleryImageGrid } from './GalleryImageGrid';
+import { GalleryImageMaint } from './GalleryImageMaint';
 import { BackButton } from './BackButton';
 
 interface PageProps {
@@ -21,7 +21,7 @@ export default async function Page({ params }: PageProps) {
         <BackButton />
       </div>
       
-      <GalleryImageGrid images={images} />
+      <GalleryImageMaint images={images} />
     </div>
   );
 }

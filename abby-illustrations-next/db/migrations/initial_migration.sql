@@ -7,6 +7,7 @@ create table if not exists app.image_metadata (
   about text,
   author text default 'Abigail Wright',
   created_date date,
+  primary_image boolean default false,
   updated_at timestamptz not null default now()
 );
 

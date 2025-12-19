@@ -6,6 +6,7 @@ import { GalleryModal } from "./GalleryModal";
 import { ConfirmCancelModal } from '@/src/components/ui';
 import { useRouter } from "next/navigation";
 import { deleteGallery } from './actions';
+import { toast } from "sonner";
 
 export default function GalleryMaint({ initialGalleries }: { initialGalleries: Gallery[] }) {
     const [showModal, setShowModal] = useState(false);    
@@ -22,6 +23,7 @@ export default function GalleryMaint({ initialGalleries }: { initialGalleries: G
         if (deleteGalleryId !== null) {
             await deleteGallery(deleteGalleryId);
             console.log('gallery deleted', deleteGalleryId);
+            toast.success("Gallery deleted successfully");
             router.refresh();
         }
         setShowDeleteConfirm({show: false, description: ""});
@@ -56,7 +58,8 @@ export default function GalleryMaint({ initialGalleries }: { initialGalleries: G
             <GalleryModal
                 isOpen={showModal}
                 onClose={() => setShowModal(false)}
-                onSuccess={async () => {                    
+                onSuccess={async () => {    
+                    toast.success("Gallery created successfully");                
                     router.refresh();
                 }}
             />

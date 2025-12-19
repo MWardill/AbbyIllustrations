@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import Navbar from "@/src/components/layout/Navbar";
 import Sidebar from "@/src/components/layout/Sidebar";
 import { ScrollContext } from "@/src/hooks/ScrollContext";
+import { Toaster } from "sonner";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const router = useTransitionRouter();
@@ -136,6 +137,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <Sidebar />
         </div>
       </div>
+      <Toaster position="top-right" richColors closeButton />
     </ScrollContext.Provider>
   );
 }

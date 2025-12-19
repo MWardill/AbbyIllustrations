@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal } from '@/src/components/ui';
 import { GalleryInput, gallerySchema } from './validation';
-import { getErrorMessage } from '@/src/lib/errorUtils';
+import { getErrorMessage, handleError } from '@/src/lib/errorUtils';
 
 
 interface GalleryModalProps {
@@ -51,6 +51,7 @@ export function GalleryModal({ isOpen, onClose, onSuccess }: GalleryModalProps) 
                 }
 
                 setServerError(payload?.message ?? "Failed to create gallery.");
+                handleError(payload?.message ?? "Failed to create gallery.");
                 return;
             }
 
@@ -60,6 +61,7 @@ export function GalleryModal({ isOpen, onClose, onSuccess }: GalleryModalProps) 
         } catch (error) {
             const err = getErrorMessage(error);
             setServerError(err);
+            handleError(err);
         } finally {
             setSubmitting(false);
         }
