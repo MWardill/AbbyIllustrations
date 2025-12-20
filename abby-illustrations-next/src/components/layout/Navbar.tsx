@@ -1,4 +1,4 @@
-import { FaInstagram, FaEtsy } from 'react-icons/fa';
+import { FaInstagram, FaEtsy, FaBars } from 'react-icons/fa';
 import NextImage from "next/image";
 import { useSession } from "next-auth/react";
 import { Image } from '../images';
@@ -21,8 +21,8 @@ export default function Navbar() {
     return (
         <div className="navbar bg-base-100 shadow-md border-b border-base-200 h-28 lg:h-32 p-0 items-center z-50 relative">
             <div className="flex-none lg:hidden flex items-center">
-                <label htmlFor="site-drawer" className="btn btn-square btn-ghost">
-                    ☰
+                <label htmlFor="site-drawer" className="btn btn-square btn-ghost">                    
+                    <FaBars className="h-4 w-4" />
                 </label>
             </div>
             <div className="hidden lg:flex flex-none w-28 pl-10"></div>

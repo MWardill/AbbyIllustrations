@@ -7,6 +7,7 @@ import { ConfirmCancelModal } from '@/src/components/ui';
 import { useRouter } from "next/navigation";
 import { deleteGallery } from './actions';
 import { toast } from "sonner";
+import { Plus } from "lucide-react";
 
 export default function GalleryMaint({ initialGalleries }: { initialGalleries: Gallery[] }) {
     const [showModal, setShowModal] = useState(false);    
@@ -38,13 +39,13 @@ export default function GalleryMaint({ initialGalleries }: { initialGalleries: G
     return (
         <>
             <div className="p-8">
-                <div className="flex justify-between items-center mb-6">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 md:gap-0 sticky top-0 bg-base-100 z-10 py-2">
                     <h1 className="text-3xl font-bold">Gallery Management</h1>
                     <button
                         className="btn btn-primary"
                         onClick={() => setShowModal(true)}
                     >
-                        Add Gallery
+                        <Plus className="h-4 w-4" /> Add Gallery
                     </button>
                 </div>
 

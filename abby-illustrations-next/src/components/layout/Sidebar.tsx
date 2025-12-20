@@ -15,7 +15,7 @@ const navItems = [
     { to: "/christmas-animals", label: "Christmas Animals" },
     { to: "https://www.etsy.com/uk/shop/AbbysIllustrations", label: "Shop", external: true },
     { to: "/about", label: "About" },
-    { to: "/gallery-maint", label: "Gallery Maintenance", requiresAuth: true },
+    { to: "/gallery-maint", label: "Gallery Management", requiresAuth: true },
 ];
 
 
