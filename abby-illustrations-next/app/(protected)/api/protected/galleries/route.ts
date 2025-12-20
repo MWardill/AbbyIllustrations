@@ -4,6 +4,8 @@ import { getErrorMessage } from '@/src/lib/errorUtils';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
+//I think these API methods are all superfluous... I SHOULD be using Next 'use server' routes, but I wrote them already so w/e
+
 export async function GET() {
   try {
     const result = await getGalleries();
