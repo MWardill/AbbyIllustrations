@@ -4,12 +4,12 @@
   padding: 0 0 10rem 0;
   
   /* Mobile: single column */
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   width: 100%;
   
   /* Tablet and up: use CSS variables for consistency */
   @media (min-width: 1024px) {
-    grid-template-columns: repeat(var(--grid-cols, 3), 1fr);
+    grid-template-columns: repeat(var(--grid-cols, 3), minmax(0, 1fr));
   }
 }
 

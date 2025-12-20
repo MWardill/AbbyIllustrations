@@ -42,7 +42,7 @@ export default function CarouselHeader() {
   }, []);
 
   return (
-    <div ref={carouselRef} className="pt-8 px-4">
+    <div ref={carouselRef} className="px-4">
       <Carousel images={carouselImages} />
     </div>
   );

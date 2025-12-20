@@ -2,7 +2,7 @@
 import { useRef } from 'react';
 import { Image } from '../../components/images';
 
-const carouselImgClass = "w-full aspect-[4/3] rounded-box shadow-md object-cover transition-all duration-300 hover:scale-105";
+const carouselImgClass = "w-full aspect-[5/4] rounded-box shadow-md object-cover transition-all duration-300 hover:scale-105";
 const carouselImgClickableClass = carouselImgClass + " cursor-pointer";
 
 export type CarouselImage = {

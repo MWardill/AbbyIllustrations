@@ -15,7 +15,7 @@ export default async function Page({ params }: PageProps) {
   const images = await getGalleryImages(id);
 
   return (
-    <div className="p-8 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-y-6 items-center">
+    <div className="p-4 md:p-8 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-y-6 items-center">
       <h1 className="text-2xl font-bold sticky top-0 bg-base-100 z-10 py-2 md:col-start-1 md:row-start-1">
         Edit images for gallery
       </h1>
