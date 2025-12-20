@@ -1,6 +1,7 @@
 import FashionImages from './FashionImages';
 import { db, imageMetadata } from '@/db';
-import { blobUrl } from '@/src/lib/fileUtils';
+import { blobUrl } from '@/src/lib/blobUtils';
+import { handleError } from '@/src/lib/errorUtils';
 
 export const revalidate = 300;
 
@@ -20,6 +21,7 @@ async function getFashionIllustrationPhotos() {
     return rows.map((row) =>(blobUrl(row.pathname)));
    
   } catch (error) {
+    handleError('Failed to load fashion illustration blobs');
     console.error('Failed to load fashion illustration blobs', error);
     return [];
   }

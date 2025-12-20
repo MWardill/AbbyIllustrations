@@ -27,13 +27,13 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
 }
 
 body {
   margin: 0 auto;
   min-width: 320px;
-  min-height: 100vh;
-  padding: 0 0 0 1rem;
+  min-height: 100vh;  
 }
 
 ::view-transition-old(root),
