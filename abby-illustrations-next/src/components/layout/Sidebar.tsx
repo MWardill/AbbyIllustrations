@@ -11,7 +11,7 @@ const navItemsTop = [
 ]
 
 const navItemsBottom = [    
-    // { to: "/dog-portraits", label: "Dog Portraits" },
+    { to: "/dog-portraits", label: "Dog Portraits" },
     // { to: "/pet-portraits", label: "Pet Portraits" },
     // { to: "/baby-portraits", label: "Baby Portraits" },
     // { to: "/fashion-images", label: "Fashion Images" },

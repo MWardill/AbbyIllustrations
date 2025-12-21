@@ -1,5 +1,5 @@
 import { gallerySchema } from '@/app/(protected)/gallery-maint/validation';
-import { getGalleries, createGallery, deleteGallery } from '@/db/queries/gallery-maint/galleries';
+import { getGalleries, createGallery, deleteGallery, updateGallery } from '@/db/queries/gallery-maint/galleries';
 import { getErrorMessage } from '@/src/lib/errorUtils';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -46,6 +46,48 @@ export async function POST(req: Request) {
     console.error('Failed to create gallery:', error);
     return NextResponse.json(
       { message: getErrorMessage(error) ?? 'Failed to create gallery' },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json({ ok: true });
+}
+
+export async function PUT(req: Request) {
+  const body = await req.json();
+  const { id, ...data } = body;
+
+  if (!id) {
+    return NextResponse.json(
+      { message: 'Gallery ID is required' },
+      { status: 400 }
+    );
+  }
+
+  const parsed = gallerySchema.safeParse(data);
+
+  if (!parsed.success) {
+    const flattened = z.treeifyError(parsed.error);
+    return NextResponse.json(
+      {
+        fieldErrors: {
+          title: flattened.properties?.title?.errors[0],
+          menuTitle: flattened.properties?.menuTitle?.errors[0],
+          description: flattened.properties?.description?.errors[0],
+        },
+        message: 'Validation failed',
+      },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const { title, description, menuTitle } = parsed.data;
+    await updateGallery(id, title, description, menuTitle);
+  } catch (error) {
+    console.error('Failed to update gallery:', error);
+    return NextResponse.json(
+      { message: getErrorMessage(error) ?? 'Failed to update gallery' },
       { status: 500 }
     );
   }
