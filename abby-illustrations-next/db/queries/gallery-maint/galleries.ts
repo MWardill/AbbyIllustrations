@@ -13,6 +13,7 @@ export interface Gallery {
   gallery_title: string;
   menu_title: string | null;
   gallery_description: string;
+  image_position: 'top' | 'center' | 'bottom' | 'left' | 'right' | null;
   image_count: number;
   primaryImagePath: string | null;
 }
@@ -27,6 +28,7 @@ export async function getGalleries(): Promise<Gallery[]> {
         gallery_title: imageGalleries.galleryTitle,
         menu_title: imageGalleries.menuTitle,
         gallery_description: imageGalleries.galleryDescription,
+        image_position: imageGalleries.imagePosition,
         image_count: count(imageGalleriesImages.imageId),
       })
       .from(imageGalleries)
@@ -82,7 +84,7 @@ export async function getGalleryImages(galleryId: number): Promise<GalleryImage[
   }
 }
 
-export async function createGallery(title: string, description: string, menuTitle?: string): Promise<Gallery> {
+export async function createGallery(title: string, description: string, menuTitle?: string, imagePosition?: 'top' | 'center' | 'bottom' | 'left' | 'right' | null): Promise<Gallery> {
   try {
     const result = await db
       .insert(imageGalleries)
@@ -90,12 +92,14 @@ export async function createGallery(title: string, description: string, menuTitl
         galleryTitle: title,
         galleryDescription: description,
         menuTitle: menuTitle || null,
+        imagePosition: imagePosition || null,
       })
       .returning({
         id: imageGalleries.id,
         gallery_title: imageGalleries.galleryTitle,
         menu_title: imageGalleries.menuTitle,
         gallery_description: imageGalleries.galleryDescription,
+        image_position: imageGalleries.imagePosition,
       });
 
     if (!result || result.length === 0) {
@@ -117,7 +121,7 @@ export async function createGallery(title: string, description: string, menuTitl
   }
 }
 
-export async function updateGallery(id: number, title: string, description: string, menuTitle?: string): Promise<Gallery> {
+export async function updateGallery(id: number, title: string, description: string, menuTitle?: string, imagePosition?: 'top' | 'center' | 'bottom' | 'left' | 'right' | null): Promise<Gallery> {
   try {
     const result = await db
       .update(imageGalleries)
@@ -125,6 +129,7 @@ export async function updateGallery(id: number, title: string, description: stri
         galleryTitle: title,
         galleryDescription: description,
         menuTitle: menuTitle || null,
+        imagePosition: imagePosition || null,
       })
       .where(eq(imageGalleries.id, id))
       .returning({
@@ -132,6 +137,7 @@ export async function updateGallery(id: number, title: string, description: stri
         gallery_title: imageGalleries.galleryTitle,
         menu_title: imageGalleries.menuTitle,
         gallery_description: imageGalleries.galleryDescription,
+        image_position: imageGalleries.imagePosition,
       });
 
     if (!result || result.length === 0) {
@@ -351,6 +357,7 @@ export async function getGalleryByTitle(galleryTitle: string): Promise<Gallery |
         gallery_title: imageGalleries.galleryTitle,
         menu_title: imageGalleries.menuTitle,
         gallery_description: imageGalleries.galleryDescription,
+        image_position: imageGalleries.imagePosition,
         image_count: count(imageGalleriesImages.imageId),
       })
       .from(imageGalleries)

@@ -22,11 +22,17 @@ create table if not exists app.image_galleries (
   constraint image_galleries_gallery_title_uniq unique (gallery_title)
 );
 
+create type position as enum ('top', 'center', 'bottom', 'left', 'right');
+
+alter table app.image_galleries add column if not exists image_position public.position null;
+
+
 create table if not exists app.image_galleries_images (
     gallery_id int not null,
     image_id int not null,
     primary key (gallery_id, image_id)
 );
+
 
 do $$ 
 begin

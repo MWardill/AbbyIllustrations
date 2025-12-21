@@ -40,8 +40,9 @@ export async function POST(req: Request) {
   }
 
   try {    
-    const { title, description, menuTitle } = parsed.data;
-    await createGallery(title, description, menuTitle);
+    const { title, description, menuTitle, imagePosition } = parsed.data;
+    const pos = imagePosition === '' ? null : imagePosition;
+    await createGallery(title, description, menuTitle, pos);
   } catch (error) {
     console.error('Failed to create gallery:', error);
     return NextResponse.json(
@@ -82,8 +83,9 @@ export async function PUT(req: Request) {
   }
 
   try {
-    const { title, description, menuTitle } = parsed.data;
-    await updateGallery(id, title, description, menuTitle);
+    const { title, description, menuTitle, imagePosition } = parsed.data;
+    const pos = imagePosition === '' ? null : imagePosition;
+    await updateGallery(id, title, description, menuTitle, pos);
   } catch (error) {
     console.error('Failed to update gallery:', error);
     return NextResponse.json(

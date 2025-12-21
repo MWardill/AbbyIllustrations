@@ -37,12 +37,14 @@ export function GalleryModal({ isOpen, onClose, onSuccess, gallery }: GalleryMod
                     title: gallery.gallery_title,
                     menuTitle: gallery.menu_title || "",
                     description: gallery.gallery_description,
+                    imagePosition: gallery.image_position || "",
                 });
             } else {
                 reset({
                     title: "",
                     menuTitle: "",
                     description: "",
+                    imagePosition: "",
                 });
             }
         }
@@ -169,6 +171,25 @@ export function GalleryModal({ isOpen, onClose, onSuccess, gallery }: GalleryMod
                         className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
                     {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>}
+                </div>
+
+                <div>
+                    <label htmlFor="imagePosition" className="block text-sm font-medium text-gray-700">
+                        Image Position
+                    </label>
+                    <select
+                        id="imagePosition"
+                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        {...register("imagePosition")}
+                    >
+                        <option value="">Select position...</option>
+                        <option value="top">Top</option>
+                        <option value="center">Center</option>
+                        <option value="bottom">Bottom</option>
+                        <option value="left">Left</option>
+                        <option value="right">Right</option>
+                    </select>
+                    {errors.imagePosition && <p className="mt-1 text-sm text-red-600">{errors.imagePosition.message}</p>}
                 </div>
             </form>
         </Modal>
