@@ -44,12 +44,22 @@ export default function ImageModal({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto"
                     onClick={onClose}
                 >
+                    <button
+                        className="fixed top-4 right-4 z-[60] btn btn-circle btn-sm btn-ghost bg-black/50 text-white hover:bg-black/70 border-none"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onClose();
+                        }}
+                        aria-label="Close"
+                    >
+                        ✕
+                    </button>
+                    
                     <motion.div 
-                        className="relative max-w-full max-h-full flex flex-col md:flex-row items-start justify-center gap-4 p-4" 
-                        onClick={(e) => e.stopPropagation()}
+                        className="relative w-full max-w-full min-h-full md:min-h-0 flex flex-col md:flex-row items-start justify-center gap-4 p-4 my-auto"
                     >
                         <motion.div 
                             layoutId={expand && !isMobile ? `image-${src}` : undefined}
@@ -83,7 +93,7 @@ export default function ImageModal({
                                                     initial={{ opacity: 0, x: 20 }}
                                                     animate={{ opacity: 1, x: 0 }}
                                                     exit={{ opacity: 0, x: 20 }}
-                                                    transition={{ delay: 0.3 + (i * 0.1) }}
+                                                    transition={{ delay: 0.2 + (i * 0.1) }}
                                                     className={`text-lg font-medium ${i > 0 ? 'mt-3' : 'mb-1'}`}
                                                 >
                                                     {p}
@@ -105,13 +115,6 @@ export default function ImageModal({
                             </motion.div>
                         )}
 
-                        <button
-                            className="absolute -top-4 -right-4 btn btn-circle btn-sm btn-ghost bg-black/50 text-white hover:bg-black/70 border-none"
-                            onClick={onClose}
-                            aria-label="Close"
-                        >
-                            ✕
-                        </button>
                     </motion.div>
                 </motion.div>
             )}
