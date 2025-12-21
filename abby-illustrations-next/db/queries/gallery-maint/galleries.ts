@@ -7,6 +7,7 @@ import { del } from '@vercel/blob';
 import { blobUrl } from '@/src/lib/blobUtils';
 import { put } from '@vercel/blob';
 import 'server-only';
+import { logErrorObjectToDb } from '@/app/actions/logging';
 
 export interface Gallery {
   id: number;
@@ -80,6 +81,7 @@ export async function getGalleryImages(galleryId: number): Promise<GalleryImage[
     return result.map(row => row.image_metadata);
   } catch (error) {
     console.error('Failed to fetch gallery images:', error);
+    logErrorObjectToDb(error, 'Failed to fetch gallery images').catch(console.error);
     throw new Error('Failed to fetch gallery images');
   }
 }
@@ -117,6 +119,7 @@ export async function createGallery(title: string, description: string, menuTitl
       throw new Error(customMessage);
     }
     console.error('Failed to create gallery:', error);
+    logErrorObjectToDb(error, 'Failed to create gallery').catch(console.error);
     throw new Error('Failed to create gallery');
   }
 }
@@ -157,6 +160,7 @@ export async function updateGallery(id: number, title: string, description: stri
       throw new Error(customMessage);
     }
     console.error('Failed to update gallery:', error);
+    logErrorObjectToDb(error, 'Failed to update gallery').catch(console.error);
     throw new Error('Failed to update gallery');
   }
 }
@@ -214,6 +218,7 @@ export async function deleteGallery(galleryId: number): Promise<void> {
       .where(sql`${imageGalleries.id} = ${galleryId}`);
   } catch (error) {
     console.error('Failed to delete gallery:', error);
+    logErrorObjectToDb(error, 'Failed to delete gallery').catch(console.error);
     throw new Error('Failed to delete gallery');
   }
 }
@@ -231,7 +236,8 @@ export async function updateImage(id: number, data: Partial<GalleryImage>) {
       })
       .where(sql`${imageMetadata.id} = ${id}`);
   } catch (error) {
-    console.error('Failed to update image:', error);
+    console.error('Failed to update image:', error);  
+    logErrorObjectToDb(error, 'Failed to update image').catch(console.error);
     throw new Error('Failed to update image');
   }
 }
@@ -287,6 +293,7 @@ export async function uploadGalleryImages(
     return results;
   } catch (error) {
     console.error('Failed to upload gallery images:', error);
+    logErrorObjectToDb(error, 'Failed to upload gallery images').catch(console.error);
     throw new Error('Failed to upload gallery images');
   }
 }
@@ -318,6 +325,7 @@ export async function deleteImage(id: number): Promise<void> {
 
   } catch (error) {
     console.error('Failed to delete image:', error);
+    logErrorObjectToDb(error, 'Failed to delete image').catch(console.error);
     throw new Error('Failed to delete image');
   }
 }
@@ -345,6 +353,7 @@ export async function getGalleryImagesByTitle(galleryTitle: string): Promise<Gal
     return result.map(row => row.image_metadata);
   } catch (error) {
     console.error('Failed to fetch gallery images by title:', error);
+    logErrorObjectToDb(error, 'Failed to fetch gallery images by title').catch(console.error);
     throw new Error('Failed to fetch gallery images by title');
   }
 }
@@ -391,6 +400,7 @@ export async function getGalleryByTitle(galleryTitle: string): Promise<Gallery |
     };
   } catch (error) {
     console.error('Failed to fetch gallery by title:', error);
+    logErrorObjectToDb(error, 'Failed to fetch gallery by title').catch(console.error);
     throw new Error('Failed to fetch gallery by title');
   }
 }

@@ -3,9 +3,10 @@
 import { useGalleries } from "@/src/hooks/GalleryContext";
 import ImageGallery from "@/src/components/gallery/ImageGallery";
 import { notFound } from "next/navigation";
+import type { GalleryImage } from "@/db/queries/gallery-maint/galleries";
 
 interface GalleryRootProps {
-    images: string[];
+    images: GalleryImage[];
     galleryTitle: string;
 }
 

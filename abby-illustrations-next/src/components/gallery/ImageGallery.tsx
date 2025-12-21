@@ -1,8 +1,10 @@
 import { Image } from '../images';
+import type { GalleryImage } from '@/db/queries/gallery-maint/galleries';
+import { blobUrl } from '@/src/lib/blobUtils';
 
 interface ImageGalleryProps {
     title: string;
-    photos: string[];
+    photos: GalleryImage[];
     children: React.ReactNode;
     /** Controls where the image is cropped from. Default is 'top'. */
     objectPosition?: 'top' | 'center' | 'bottom' | 'left' | 'right';
@@ -28,7 +30,14 @@ export default function ImageGallery({ title, photos, children, objectPosition =
                 <div className="flex flex-col gap-4 md:grid md:grid-cols-3">
                     {photos.map((photo, index) => (
                         <div key={index} className="rounded-box overflow-hidden aspect-3/4">
-                            <Image src={photo} alt={`${title} ${index + 1}`} className={`w-full h-full object-cover ${objectPositionClass}`} expand />
+                            <Image 
+                                src={blobUrl(photo.pathname)} 
+                                alt={photo.alt || `${title} ${index + 1}`} 
+                                className={`w-full h-full object-cover ${objectPositionClass}`} 
+                                expand 
+                                author={photo.author}
+                                about={photo.about}
+                            />
                         </div>
                     ))}
                 </div>
