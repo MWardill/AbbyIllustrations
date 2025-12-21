@@ -8,8 +8,10 @@ import Navbar from "@/src/components/layout/Navbar";
 import Sidebar from "@/src/components/layout/Sidebar";
 import { ScrollContext } from "@/src/hooks/ScrollContext";
 import { Toaster } from "sonner";
+import { Gallery } from "@/db/queries/gallery-maint/galleries";
+import { GalleryProvider } from "@/src/hooks/GalleryContext";
 
-export default function AppShell({ children }: { children: React.ReactNode }) {
+export default function AppShell({ children, galleries }: { children: React.ReactNode; galleries: Gallery[] }) {
   const router = useTransitionRouter();
   const pathname = usePathname();
 
@@ -116,28 +118,30 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <ScrollContext.Provider value={value}>
-      <div className="h-screen flex flex-col overflow-hidden">
-        <Navbar />
+    <GalleryProvider galleries={galleries}>
+      <ScrollContext.Provider value={value}>
+        <div className="h-screen flex flex-col overflow-hidden">
+          <Navbar />
 
-        <div className="drawer lg:drawer-open flex-1 overflow-hidden">
-          <input id="site-drawer" type="checkbox" className="drawer-toggle" />
+          <div className="drawer lg:drawer-open flex-1 overflow-hidden">
+            <input id="site-drawer" type="checkbox" className="drawer-toggle" />
 
-          <div
-            ref={drawerContentRef}
-            className="drawer-content flex flex-col bg-base-200/50 overflow-y-auto relative"
-            style={{ paddingBottom: scrollBuffer }}
-          >            
-            {children}
-            <div className="hidden md:block fixed bottom-2 right-3 text-[10px] px-10 text-gray-400/70 pointer-events-none select-none">
-              Next v1.2
+            <div
+              ref={drawerContentRef}
+              className="drawer-content flex flex-col bg-base-200/50 overflow-y-auto relative"
+              style={{ paddingBottom: scrollBuffer }}
+            >            
+              {children}
+              <div className="hidden md:block fixed bottom-2 right-3 text-[10px] px-10 text-gray-400/70 pointer-events-none select-none">
+                Next v1.2
+              </div>
             </div>
-          </div>
 
-          <Sidebar />
+            <Sidebar />
+          </div>
         </div>
-      </div>
-      <Toaster position="top-right" richColors closeButton />
-    </ScrollContext.Provider>
+        <Toaster position="top-right" richColors closeButton />
+      </ScrollContext.Provider>
+    </GalleryProvider>
   );
 }

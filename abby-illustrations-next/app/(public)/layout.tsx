@@ -6,7 +6,6 @@ import { useScroll } from "@/src/hooks/ScrollContext";
 export default function Layout({ children }: { children: React.ReactNode }) {
 
   
-
   return (
     <>
       <div className="pt-8 px-4">

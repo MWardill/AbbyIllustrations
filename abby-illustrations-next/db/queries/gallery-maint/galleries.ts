@@ -11,32 +11,54 @@ import 'server-only';
 export interface Gallery {
   id: number;
   gallery_title: string;
+  menu_title: string | null;
   gallery_description: string;
   image_count: number;
+  primaryImagePath: string | null;
 }
 
 export type GalleryImage = InferSelectModel<typeof imageMetadata>;
 
 export async function getGalleries(): Promise<Gallery[]> {
   try {
-    const result = await db
+    const galleries = await db
       .select({
         id: imageGalleries.id,
         gallery_title: imageGalleries.galleryTitle,
+        menu_title: imageGalleries.menuTitle,
         gallery_description: imageGalleries.galleryDescription,
         image_count: count(imageGalleriesImages.imageId),
       })
       .from(imageGalleries)
       .leftJoin(
         imageGalleriesImages,
-        sql`${imageGalleries.id} = ${imageGalleriesImages.galleryId}`
+        eq(imageGalleries.id, imageGalleriesImages.galleryId)
       )
       .groupBy(imageGalleries.id)
       .orderBy(imageGalleries.galleryTitle);
 
-    return result;
+    const primaryImages = await db
+      .select({
+        galleryId: imageGalleriesImages.galleryId,
+        pathname: imageMetadata.pathname,
+      })
+      .from(imageMetadata)
+      .innerJoin(
+        imageGalleriesImages,
+        eq(imageMetadata.id, imageGalleriesImages.imageId)
+      )
+      .where(eq(imageMetadata.primaryImage, true));
+
+    const primaryImageMap = new Map(
+      primaryImages.map((img) => [img.galleryId, img.pathname])
+    );
+
+    return galleries.map((gallery) => ({
+      ...gallery,
+      primaryImagePath: primaryImageMap.get(gallery.id) || null,
+    }));
   } catch (error) {
-    console.error('Failed to fetch galleries:', error);
+    console.error('Failed to fetch galleries:', error);    
     throw new Error('Failed to fetch galleries');
   }
 }
@@ -60,17 +82,19 @@ export async function getGalleryImages(galleryId: number): Promise<GalleryImage[
   }
 }
 
-export async function createGallery(title: string, description: string): Promise<Gallery> {
+export async function createGallery(title: string, description: string, menuTitle?: string): Promise<Gallery> {
   try {
     const result = await db
       .insert(imageGalleries)
       .values({
         galleryTitle: title,
         galleryDescription: description,
+        menuTitle: menuTitle || null,
       })
       .returning({
         id: imageGalleries.id,
         gallery_title: imageGalleries.galleryTitle,
+        menu_title: imageGalleries.menuTitle,
         gallery_description: imageGalleries.galleryDescription,
       });
 
@@ -81,6 +105,7 @@ export async function createGallery(title: string, description: string): Promise
     return {
       ...result[0],
       image_count: 0,
+      primaryImagePath: null,
     };
   } catch (error) {
     const customMessage = getDuplicateErrorMessage(error);
@@ -255,4 +280,72 @@ export async function deleteImage(id: number): Promise<void> {
 
 export async function test () {
   return 'test';
+}
+
+export async function getGalleryImagesByTitle(galleryTitle: string): Promise<GalleryImage[]> {
+  try {
+    const result = await db
+      .select()
+      .from(imageMetadata)
+      .innerJoin(
+        imageGalleriesImages,
+        eq(imageMetadata.id, imageGalleriesImages.imageId)
+      )
+      .innerJoin(
+        imageGalleries,
+        eq(imageGalleriesImages.galleryId, imageGalleries.id)
+      )
+      .where(eq(imageGalleries.galleryTitle, galleryTitle))
+      .orderBy(imageMetadata.pathname);
+
+    return result.map(row => row.image_metadata);
+  } catch (error) {
+    console.error('Failed to fetch gallery images by title:', error);
+    throw new Error('Failed to fetch gallery images by title');
+  }
+}
+
+export async function getGalleryByTitle(galleryTitle: string): Promise<Gallery | undefined> {
+  try {
+    const [gallery] = await db
+      .select({
+        id: imageGalleries.id,
+        gallery_title: imageGalleries.galleryTitle,
+        menu_title: imageGalleries.menuTitle,
+        gallery_description: imageGalleries.galleryDescription,
+        image_count: count(imageGalleriesImages.imageId),
+      })
+      .from(imageGalleries)
+      .leftJoin(
+        imageGalleriesImages,
+        eq(imageGalleries.id, imageGalleriesImages.galleryId)
+      )
+      .where(eq(imageGalleries.galleryTitle, galleryTitle))
+      .groupBy(imageGalleries.id);
+
+    if (!gallery) return undefined;
+
+    // Get primary image if exists
+    const [primaryImage] = await db
+      .select({
+        pathname: imageMetadata.pathname,
+      })
+      .from(imageMetadata)
+      .innerJoin(
+        imageGalleriesImages,
+        eq(imageMetadata.id, imageGalleriesImages.imageId)
+      )
+      .where(
+        sql`${imageGalleriesImages.galleryId} = ${gallery.id} AND ${imageMetadata.primaryImage} = true`
+      )
+      .limit(1);
+
+    return {
+      ...gallery,
+      primaryImagePath: primaryImage?.pathname || null,
+    };
+  } catch (error) {
+    console.error('Failed to fetch gallery by title:', error);
+    throw new Error('Failed to fetch gallery by title');
+  }
 }

@@ -17,6 +17,7 @@ create unique index if not exists image_metadata_pathname_uidx
 create table if not exists app.image_galleries (
   id int generated always as identity primary key,
   gallery_title text not null,
+  menu_title text not null,
   gallery_description text not null,
   constraint image_galleries_gallery_title_uniq unique (gallery_title)
 );
@@ -55,9 +56,9 @@ end $$;
 
 
   
-insert into app.image_galleries (gallery_title, gallery_description)
+insert into app.image_galleries (gallery_title, menu_title, gallery_description)
 values
-  ('fashion-illustrations', 'A collection of fashion illustrations featuring various designers and styles.')
+  ('fashion-illustrations', 'Fashion Illustrations', 'A collection of fashion illustrations featuring various designers and styles.')
 on conflict do nothing;
     
 insert into app.image_metadata (pathname, alt, about, created_date)

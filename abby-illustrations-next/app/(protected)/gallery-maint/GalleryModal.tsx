@@ -32,7 +32,7 @@ export function GalleryModal({ isOpen, onClose, onSuccess }: GalleryModalProps) 
         setSubmitting(true);
         setServerError(null);
 
-        try {
+        try {            
             const res = await fetch("/api/protected/galleries", {
                 method: "POST",
                 headers: { "content-type": "application/json" },
@@ -45,6 +45,9 @@ export function GalleryModal({ isOpen, onClose, onSuccess }: GalleryModalProps) 
                 // If server returned fieldErrors, map them into RHF
                 if (payload?.fieldErrors?.title?.[0]) {
                     setError("title", { type: "server", message: payload.fieldErrors.title[0] });
+                }
+                if (payload?.fieldErrors?.menuTitle?.[0]) {
+                    setError("menuTitle", { type: "server", message: payload.fieldErrors.menuTitle[0] });
                 }
                 if (payload?.fieldErrors?.description?.[0]) {
                     setError("description", { type: "server", message: payload.fieldErrors.description[0] });
@@ -112,6 +115,21 @@ export function GalleryModal({ isOpen, onClose, onSuccess }: GalleryModalProps) 
                         {...register("title")}
                     />
                     {errors.title && <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>}
+                </div>
+
+                <div>
+                    <label htmlFor="menuTitle" className="block text-sm font-medium text-gray-700">
+                        Menu Title
+                    </label>
+                    <input
+                        id="menuTitle"
+                        type="text"
+                        required
+                        placeholder="e.g., Fashion"
+                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        {...register("menuTitle")}
+                    />
+                    {errors.menuTitle && <p className="mt-1 text-sm text-red-600">{errors.menuTitle.message}</p>}
                 </div>
 
                 <div>

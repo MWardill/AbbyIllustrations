@@ -16,6 +16,7 @@ export const imageMetadata = appSchema.table('image_metadata', {
 export const imageGalleries = appSchema.table('image_galleries', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   galleryTitle: text('gallery_title').notNull().unique(),
+  menuTitle: text('menu_title'),
   galleryDescription: text('gallery_description').notNull(),
 });
 

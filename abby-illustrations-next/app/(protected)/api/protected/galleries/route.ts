@@ -30,6 +30,7 @@ export async function POST(req: Request) {
       {
         fieldErrors: {
           title: flattened.properties?.title?.errors[0],
+          menuTitle: flattened.properties?.menuTitle?.errors[0],
           description: flattened.properties?.description?.errors[0],
         },
         message: 'Validation failed',
@@ -39,8 +40,8 @@ export async function POST(req: Request) {
   }
 
   try {    
-    const { title, description } = parsed.data;
-    await createGallery(title, description);
+    const { title, description, menuTitle } = parsed.data;
+    await createGallery(title, description, menuTitle);
   } catch (error) {
     console.error('Failed to create gallery:', error);
     return NextResponse.json(

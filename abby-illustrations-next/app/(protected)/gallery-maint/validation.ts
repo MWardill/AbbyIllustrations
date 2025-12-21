@@ -6,6 +6,12 @@ export const gallerySchema = z.object({
     .trim()
     .min(2, "Title must be at least 2 characters.")
     .max(100, "Title must be 100 characters or less."),
+  menuTitle: z
+    .string()
+    .trim()
+    .min(2, "Menu title  must be at least 2 characters.")
+    .max(50, "Menu title must be 50 characters or less.")
+    .optional(),
   description: z
     .string()
     .trim()
