@@ -15,6 +15,7 @@ interface ImageModalProps {
     about?: string | null;
     author?: string | null;
     expand?: boolean;
+    layoutId?: string;
 }
 
 export default function ImageModal({
@@ -26,7 +27,8 @@ export default function ImageModal({
     height,
     about,
     author,
-    expand
+    expand,
+    layoutId,
 }: ImageModalProps) {
     const [isMobile, setIsMobile] = useState(false);
 
@@ -62,7 +64,7 @@ export default function ImageModal({
                         className="relative w-full max-w-full min-h-full md:min-h-0 flex flex-col md:flex-row items-start justify-center gap-4 p-4 my-auto"
                     >
                         <motion.div 
-                            layoutId={expand && !isMobile ? `image-${src}` : undefined}
+                            layoutId={expand && !isMobile ? layoutId : undefined}
                             className="relative overflow-hidden rounded-box shrink-0"
                         >
                             <NextImage

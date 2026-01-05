@@ -3,6 +3,7 @@ import { useState } from 'react';
 import NextImage from 'next/image';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
+import { usePathname } from 'next/navigation';
 
 const ImageModal = dynamic(() => import('./ImageModal'), { ssr: false });
 
@@ -18,6 +19,12 @@ interface ImageProps {
     expand?: boolean;
     author?: string | null;
     about?: string | null;
+    /**
+     * Disable shared-layout animation between thumbnail and modal.
+     * Useful for places like timeline cards where initial layout changes
+     * (e.g. aspect ratio measurement) would otherwise trigger an animation.
+     */
+    disableSharedLayoutAnimation?: boolean;
 }
 
 export default function Image({
@@ -32,8 +39,14 @@ export default function Image({
     expand = false,
     author,
     about,
+    disableSharedLayoutAnimation = false,
 }: ImageProps) {
     const [isExpanded, setIsExpanded] = useState(false);
+    const pathname = usePathname();
+
+    const layoutId = expand && !disableSharedLayoutAnimation
+        ? `${pathname}-image-${src}`
+        : undefined;
 
     const handleClick = () => {
         if (expand) {
@@ -52,7 +65,7 @@ export default function Image({
         <>
             <div className="relative w-full h-full">
                 <motion.div 
-                    layoutId={expand ? `image-${src}` : undefined}
+                    layoutId={layoutId}
                     className="w-full h-full"
                     onClick={handleClick}
                 >
@@ -83,6 +96,7 @@ export default function Image({
                 about={about}
                 author={author}
                 expand={expand}
+                layoutId={layoutId}
             />
         </>
     );
