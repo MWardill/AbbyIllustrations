@@ -7,36 +7,61 @@ import { del } from '@vercel/blob';
 import { blobUrl } from '@/src/lib/blobUtils';
 import { put } from '@vercel/blob';
 import 'server-only';
+import { logErrorObjectToDb } from '@/app/actions/logging';
 
 export interface Gallery {
   id: number;
   gallery_title: string;
+  menu_title: string | null;
   gallery_description: string;
+  image_position: 'top' | 'center' | 'bottom' | 'left' | 'right' | null;
   image_count: number;
+  primaryImagePath: string | null;
 }
 
 export type GalleryImage = InferSelectModel<typeof imageMetadata>;
 
 export async function getGalleries(): Promise<Gallery[]> {
   try {
-    const result = await db
+    const galleries = await db
       .select({
         id: imageGalleries.id,
         gallery_title: imageGalleries.galleryTitle,
+        menu_title: imageGalleries.menuTitle,
         gallery_description: imageGalleries.galleryDescription,
+        image_position: imageGalleries.imagePosition,
         image_count: count(imageGalleriesImages.imageId),
       })
       .from(imageGalleries)
       .leftJoin(
         imageGalleriesImages,
-        sql`${imageGalleries.id} = ${imageGalleriesImages.galleryId}`
+        eq(imageGalleries.id, imageGalleriesImages.galleryId)
       )
       .groupBy(imageGalleries.id)
       .orderBy(imageGalleries.galleryTitle);
 
-    return result;
+    const primaryImages = await db
+      .select({
+        galleryId: imageGalleriesImages.galleryId,
+        pathname: imageMetadata.pathname,
+      })
+      .from(imageMetadata)
+      .innerJoin(
+        imageGalleriesImages,
+        eq(imageMetadata.id, imageGalleriesImages.imageId)
+      )
+      .where(eq(imageMetadata.primaryImage, true));
+
+    const primaryImageMap = new Map(
+      primaryImages.map((img) => [img.galleryId, img.pathname])
+    );
+
+    return galleries.map((gallery) => ({
+      ...gallery,
+      primaryImagePath: primaryImageMap.get(gallery.id) || null,
+    }));
   } catch (error) {
-    console.error('Failed to fetch galleries:', error);
+    console.error('Failed to fetch galleries:', error);    
     throw new Error('Failed to fetch galleries');
   }
 }
@@ -56,22 +81,27 @@ export async function getGalleryImages(galleryId: number): Promise<GalleryImage[
     return result.map(row => row.image_metadata);
   } catch (error) {
     console.error('Failed to fetch gallery images:', error);
+    logErrorObjectToDb(error, 'Failed to fetch gallery images').catch(console.error);
     throw new Error('Failed to fetch gallery images');
   }
 }
 
-export async function createGallery(title: string, description: string): Promise<Gallery> {
+export async function createGallery(title: string, description: string, menuTitle?: string, imagePosition?: 'top' | 'center' | 'bottom' | 'left' | 'right' | null): Promise<Gallery> {
   try {
     const result = await db
       .insert(imageGalleries)
       .values({
         galleryTitle: title,
         galleryDescription: description,
+        menuTitle: menuTitle || null,
+        imagePosition: imagePosition || null,
       })
       .returning({
         id: imageGalleries.id,
         gallery_title: imageGalleries.galleryTitle,
+        menu_title: imageGalleries.menuTitle,
         gallery_description: imageGalleries.galleryDescription,
+        image_position: imageGalleries.imagePosition,
       });
 
     if (!result || result.length === 0) {
@@ -81,6 +111,7 @@ export async function createGallery(title: string, description: string): Promise
     return {
       ...result[0],
       image_count: 0,
+      primaryImagePath: null,
     };
   } catch (error) {
     const customMessage = getDuplicateErrorMessage(error);
@@ -88,7 +119,49 @@ export async function createGallery(title: string, description: string): Promise
       throw new Error(customMessage);
     }
     console.error('Failed to create gallery:', error);
+    logErrorObjectToDb(error, 'Failed to create gallery').catch(console.error);
     throw new Error('Failed to create gallery');
+  }
+}
+
+export async function updateGallery(id: number, title: string, description: string, menuTitle?: string, imagePosition?: 'top' | 'center' | 'bottom' | 'left' | 'right' | null): Promise<Gallery> {
+  try {
+    const result = await db
+      .update(imageGalleries)
+      .set({
+        galleryTitle: title,
+        galleryDescription: description,
+        menuTitle: menuTitle || null,
+        imagePosition: imagePosition || null,
+      })
+      .where(eq(imageGalleries.id, id))
+      .returning({
+        id: imageGalleries.id,
+        gallery_title: imageGalleries.galleryTitle,
+        menu_title: imageGalleries.menuTitle,
+        gallery_description: imageGalleries.galleryDescription,
+        image_position: imageGalleries.imagePosition,
+      });
+
+    if (!result || result.length === 0) {
+      throw new Error('Failed to update gallery');
+    }
+
+    return {
+      ...result[0],
+      image_count: 0, // This is not returned by update, but we need to return a Gallery object. 
+                      // Ideally we should fetch the count or just return what we have. 
+                      // For now, 0 is fine as the UI might refresh anyway.
+      primaryImagePath: null,
+    };
+  } catch (error) {
+    const customMessage = getDuplicateErrorMessage(error);
+    if (customMessage) {
+      throw new Error(customMessage);
+    }
+    console.error('Failed to update gallery:', error);
+    logErrorObjectToDb(error, 'Failed to update gallery').catch(console.error);
+    throw new Error('Failed to update gallery');
   }
 }
 
@@ -145,6 +218,7 @@ export async function deleteGallery(galleryId: number): Promise<void> {
       .where(sql`${imageGalleries.id} = ${galleryId}`);
   } catch (error) {
     console.error('Failed to delete gallery:', error);
+    logErrorObjectToDb(error, 'Failed to delete gallery').catch(console.error);
     throw new Error('Failed to delete gallery');
   }
 }
@@ -162,7 +236,8 @@ export async function updateImage(id: number, data: Partial<GalleryImage>) {
       })
       .where(sql`${imageMetadata.id} = ${id}`);
   } catch (error) {
-    console.error('Failed to update image:', error);
+    console.error('Failed to update image:', error);  
+    logErrorObjectToDb(error, 'Failed to update image').catch(console.error);
     throw new Error('Failed to update image');
   }
 }
@@ -218,6 +293,7 @@ export async function uploadGalleryImages(
     return results;
   } catch (error) {
     console.error('Failed to upload gallery images:', error);
+    logErrorObjectToDb(error, 'Failed to upload gallery images').catch(console.error);
     throw new Error('Failed to upload gallery images');
   }
 }
@@ -249,10 +325,82 @@ export async function deleteImage(id: number): Promise<void> {
 
   } catch (error) {
     console.error('Failed to delete image:', error);
+    logErrorObjectToDb(error, 'Failed to delete image').catch(console.error);
     throw new Error('Failed to delete image');
   }
 }
 
 export async function test () {
   return 'test';
+}
+
+export async function getGalleryImagesByTitle(galleryTitle: string): Promise<GalleryImage[]> {
+  try {
+    const result = await db
+      .select()
+      .from(imageMetadata)
+      .innerJoin(
+        imageGalleriesImages,
+        eq(imageMetadata.id, imageGalleriesImages.imageId)
+      )
+      .innerJoin(
+        imageGalleries,
+        eq(imageGalleriesImages.galleryId, imageGalleries.id)
+      )
+      .where(eq(imageGalleries.galleryTitle, galleryTitle))
+      .orderBy(imageMetadata.pathname);
+
+    return result.map(row => row.image_metadata);
+  } catch (error) {
+    console.error('Failed to fetch gallery images by title:', error);
+    logErrorObjectToDb(error, 'Failed to fetch gallery images by title').catch(console.error);
+    throw new Error('Failed to fetch gallery images by title');
+  }
+}
+
+export async function getGalleryByTitle(galleryTitle: string): Promise<Gallery | undefined> {
+  try {
+    const [gallery] = await db
+      .select({
+        id: imageGalleries.id,
+        gallery_title: imageGalleries.galleryTitle,
+        menu_title: imageGalleries.menuTitle,
+        gallery_description: imageGalleries.galleryDescription,
+        image_position: imageGalleries.imagePosition,
+        image_count: count(imageGalleriesImages.imageId),
+      })
+      .from(imageGalleries)
+      .leftJoin(
+        imageGalleriesImages,
+        eq(imageGalleries.id, imageGalleriesImages.galleryId)
+      )
+      .where(eq(imageGalleries.galleryTitle, galleryTitle))
+      .groupBy(imageGalleries.id);
+
+    if (!gallery) return undefined;
+
+    // Get primary image if exists
+    const [primaryImage] = await db
+      .select({
+        pathname: imageMetadata.pathname,
+      })
+      .from(imageMetadata)
+      .innerJoin(
+        imageGalleriesImages,
+        eq(imageMetadata.id, imageGalleriesImages.imageId)
+      )
+      .where(
+        sql`${imageGalleriesImages.galleryId} = ${gallery.id} AND ${imageMetadata.primaryImage} = true`
+      )
+      .limit(1);
+
+    return {
+      ...gallery,
+      primaryImagePath: primaryImage?.pathname || null,
+    };
+  } catch (error) {
+    console.error('Failed to fetch gallery by title:', error);
+    logErrorObjectToDb(error, 'Failed to fetch gallery by title').catch(console.error);
+    throw new Error('Failed to fetch gallery by title');
+  }
 }

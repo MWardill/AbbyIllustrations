@@ -20,7 +20,6 @@ export async function uploadImages(id: number, formData: FormData) {
   if (files.length === 0) return;
 
   try {
-
     const uploads = files.map(file => ({
       metadata: {
         alt: file.name,

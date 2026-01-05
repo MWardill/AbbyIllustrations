@@ -17,15 +17,22 @@ create unique index if not exists image_metadata_pathname_uidx
 create table if not exists app.image_galleries (
   id int generated always as identity primary key,
   gallery_title text not null,
+  menu_title text not null,
   gallery_description text not null,
   constraint image_galleries_gallery_title_uniq unique (gallery_title)
 );
+
+create type position as enum ('top', 'center', 'bottom', 'left', 'right');
+
+alter table app.image_galleries add column if not exists image_position public.position null;
+
 
 create table if not exists app.image_galleries_images (
     gallery_id int not null,
     image_id int not null,
     primary key (gallery_id, image_id)
 );
+
 
 do $$ 
 begin
@@ -55,9 +62,9 @@ end $$;
 
 
   
-insert into app.image_galleries (gallery_title, gallery_description)
+insert into app.image_galleries (gallery_title, menu_title, gallery_description)
 values
-  ('fashion-illustrations', 'A collection of fashion illustrations featuring various designers and styles.')
+  ('fashion-illustrations', 'Fashion Illustrations', 'A collection of fashion illustrations featuring various designers and styles.')
 on conflict do nothing;
     
 insert into app.image_metadata (pathname, alt, about, created_date)

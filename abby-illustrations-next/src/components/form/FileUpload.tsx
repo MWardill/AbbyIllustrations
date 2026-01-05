@@ -55,11 +55,36 @@ export function FileUpload({ onUpload }: FileUploadProps) {
     
     setIsUploading(true);
     try {
-      const formData = new FormData();
-      files.forEach(file => {
-        formData.append('files', file);
-      });
-      await onUpload(formData);
+      const CHUNK_SIZE = 500 * 1024; // 500KB chunks to stay under Next.js server action limit
+      let currentBatch: File[] = [];
+      let currentSize = 0;
+
+      for (const file of files) {
+        const newSize = currentSize + file.size;
+        
+        if (newSize > CHUNK_SIZE && currentBatch.length > 0) {          
+          const formData = new FormData();
+          currentBatch.forEach(f => {
+            formData.append('files', f);
+          });
+          await onUpload(formData);
+          
+          currentBatch = [file];
+          currentSize = file.size;
+        } else {          
+          currentBatch.push(file);
+          currentSize = newSize;
+        }
+      }
+      
+      if (currentBatch.length > 0) {
+        const formData = new FormData();
+        currentBatch.forEach(f => {
+          formData.append('files', f);
+        });
+        await onUpload(formData);
+      }
+
       setFiles([]); // Clear files after successful upload
     } catch (error) {
       handleError(error);

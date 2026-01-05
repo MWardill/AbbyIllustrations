@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Layout from "../src/components/layout/Layout";
+import AppShell from "../src/components/layout/AppShell";
 import { ViewTransitions } from "next-view-transitions";
 import Providers from "./providers";
 import { auth } from "@/auth";
+import { getGalleries } from "@/db/queries/gallery-maint/galleries";
 
 export const metadata: Metadata = {
   title: "Abby Illustrations",
@@ -19,12 +20,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
+  const galleries = await getGalleries();
+
   return (
     <ViewTransitions>
       <html lang="en" data-theme="cupcake">
         <body>
           <Providers session={session}>
-            <Layout>{children}</Layout>
+            <AppShell galleries={galleries}>{children}</AppShell>
           </Providers>
         </body>
       </html>

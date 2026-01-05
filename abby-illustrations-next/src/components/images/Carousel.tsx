@@ -22,7 +22,7 @@ type CarouselProps = {
 
 export default function Carousel({ 
     images, 
-    itemWidth = { sm: 45, lg: 20 } 
+    itemWidth = { sm: 55, lg: 25 } 
 }: CarouselProps) {
     const carouselRef = useRef<HTMLDivElement>(null);
 

@@ -1,4 +1,6 @@
-import { text, date, timestamp, integer, pgSchema, boolean } from 'drizzle-orm/pg-core';
+import { text, date, timestamp, integer, pgSchema, boolean, pgEnum } from 'drizzle-orm/pg-core';
+
+export const positionEnum = pgEnum('position', ['top', 'center', 'bottom', 'left', 'right']);
 
 export const appSchema = pgSchema('app');
 
@@ -16,7 +18,9 @@ export const imageMetadata = appSchema.table('image_metadata', {
 export const imageGalleries = appSchema.table('image_galleries', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   galleryTitle: text('gallery_title').notNull().unique(),
+  menuTitle: text('menu_title'),
   galleryDescription: text('gallery_description').notNull(),
+  imagePosition: positionEnum('image_position'),
 });
 
 export const imageGalleriesImages = appSchema.table('image_galleries_images', {

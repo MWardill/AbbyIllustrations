@@ -13,7 +13,7 @@ export default function CarouselHeader() {
       { src: "/images/dog-pictures/Abby_Wardill_Dog_Illustration_Smaller_1000.jpg", alt: "Dog Illustrations", eager: true, onClick: () => handleCarouselNavigate?.("/dog-portraits") },
       { src: "/images/pet-portraits/Cat_Abby_Wright.jpg", alt: "Pet Portraits", eager: true, onClick: () => handleCarouselNavigate?.("/pet-portraits") },
       { src: "/images/portraits/Greta_Thunberg_600.jpg", alt: "Portraits", eager: true, onClick: () => handleCarouselNavigate?.("/portraits") },
-      { src: "/images/fashion-illustrations/Anna_Calvi.jpg", alt: "Fashion Illustrations", eager: true, onClick: () => handleCarouselNavigate?.("/fashion-images") },
+      { src: "/images/fashion-illustrations/Anna_Calvi.jpg", alt: "Fashion Illustrations", eager: true, onClick: () => handleCarouselNavigate?.("/fashion-illustrations") },
       { src: "/images/baby-pictures/Baby_Girl_Website_700.jpg", alt: "Baby Illustrations", eager: true, onClick: () => handleCarouselNavigate?.("/baby-portraits") },
       { src: "/images/animal-illustrations/piggy.jpeg", alt: "Animal Illustrations", eager: true, onClick: () => handleCarouselNavigate?.("/animal-images") },
       { src: "/images/christmas-animals/Rabbit_Card_Abby_Wright_600.jpg", alt: "Christmas Animals", eager: true, onClick: () => handleCarouselNavigate?.("/christmas-animals") },

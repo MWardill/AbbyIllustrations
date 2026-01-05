@@ -1,22 +1,32 @@
 import { Gallery } from './types';
-import { Trash2, Edit } from 'lucide-react';
+import { Trash2, Edit, Settings } from 'lucide-react';
 
 interface GalleryTableProps {
   galleries: Gallery[];
   onEdit?: (galleryId: number) => void | Promise<void>;
+  onEditDetails?: (gallery: Gallery) => void;
   onDelete?: (galleryId: number, galleryDesc: string) => void | Promise<void>;
 }
 
 const GalleryActions = ({ 
   gallery, 
   onEdit, 
+  onEditDetails,
   onDelete 
 }: { 
   gallery: Gallery; 
   onEdit: (id: number) => void; 
+  onEditDetails?: (gallery: Gallery) => void;
   onDelete: (id: number, title: string) => void; 
 }) => (
   <>
+    <button
+      onClick={() => onEditDetails?.(gallery)}
+      className="btn btn-ghost btn-sm"
+      title="Edit gallery details"
+    >
+      <Settings className="h-4 w-4 text-gray-600" />
+    </button>
     <button
       onClick={() => onEdit(gallery.id)}
       className="btn btn-ghost btn-sm"
@@ -34,7 +44,7 @@ const GalleryActions = ({
   </>
 );
 
-export function GalleryTable({ galleries, onEdit, onDelete }: GalleryTableProps) {
+export function GalleryTable({ galleries, onEdit, onEditDetails, onDelete }: GalleryTableProps) {
   const handleEdit = (galleryId: number) => {
     onEdit?.(galleryId);
   };
@@ -63,7 +73,7 @@ export function GalleryTable({ galleries, onEdit, onDelete }: GalleryTableProps)
                 <td className="text-right">{gallery.image_count}</td>
                 <td>
                   <div className="flex justify-center gap-4">
-                    <GalleryActions gallery={gallery} onEdit={handleEdit} onDelete={handleDelete} />
+                    <GalleryActions gallery={gallery} onEdit={handleEdit} onEditDetails={onEditDetails} onDelete={handleDelete} />
                   </div>
                 </td>
               </tr>
@@ -83,7 +93,7 @@ export function GalleryTable({ galleries, onEdit, onDelete }: GalleryTableProps)
               </div>
               <p className="text-sm text-gray-600 mt-2">{gallery.gallery_description}</p>
               <div className="card-actions justify-end mt-4 border-t border-gray-100 pt-4">
-                <GalleryActions gallery={gallery} onEdit={handleEdit} onDelete={handleDelete} />
+                <GalleryActions gallery={gallery} onEdit={handleEdit} onEditDetails={onEditDetails} onDelete={handleDelete} />
               </div>
             </div>
           </div>

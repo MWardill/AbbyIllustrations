@@ -1,7 +1,11 @@
 'use client';
 import { useState } from 'react';
-import { createPortal } from 'react-dom';
 import NextImage from 'next/image';
+import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
+import { usePathname } from 'next/navigation';
+
+const ImageModal = dynamic(() => import('./ImageModal'), { ssr: false });
 
 interface ImageProps {
     src: string;
@@ -13,6 +17,14 @@ interface ImageProps {
     sizes?: string;
     onClick?: () => void;
     expand?: boolean;
+    author?: string | null;
+    about?: string | null;
+    /**
+     * Disable shared-layout animation between thumbnail and modal.
+     * Useful for places like timeline cards where initial layout changes
+     * (e.g. aspect ratio measurement) would otherwise trigger an animation.
+     */
+    disableSharedLayoutAnimation?: boolean;
 }
 
 export default function Image({
@@ -25,8 +37,16 @@ export default function Image({
     sizes,
     onClick,
     expand = false,
+    author,
+    about,
+    disableSharedLayoutAnimation = false,
 }: ImageProps) {
     const [isExpanded, setIsExpanded] = useState(false);
+    const pathname = usePathname();
+
+    const layoutId = expand && !disableSharedLayoutAnimation
+        ? `${pathname}-image-${src}`
+        : undefined;
 
     const handleClick = () => {
         if (expand) {
@@ -41,44 +61,43 @@ export default function Image({
 
     const canExpand = expand;
 
-    const expandedModal = isExpanded ? createPortal(
-        <div 
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-            onClick={handleClose}
-        >
-            <div className="relative max-w-[90vw] max-h-[90vh]">
-                <NextImage
-                    src={src}
-                    alt={alt}
-                    className="max-w-full max-h-[90vh] object-contain rounded-box"
-                    width={width || 800}
-                    height={height || 600}
-                />
-                <button
-                    className="absolute -top-4 -right-4 btn btn-circle btn-sm"
-                    onClick={handleClose}
-                    aria-label="Close"
-                >
-                    ✕
-                </button>
-            </div>
-        </div>,
-        document.body
-    ) : null;
-
     return (
         <>
-            <NextImage
+            <div className="relative w-full h-full">
+                <motion.div 
+                    layoutId={layoutId}
+                    className="w-full h-full"
+                    onClick={handleClick}
+                >
+                    <NextImage
+                        src={src}
+                        alt={alt}
+                        width={width || 800}
+                        height={height || 600}
+                        className={`${className} ${canExpand ? 'cursor-pointer' : ''}`}
+                        priority={eager}
+                        sizes={sizes}
+                    />
+                </motion.div>
+                {author && (
+                    <div className="absolute bottom-0 left-0 bg-black/50 text-white text-xs p-2 backdrop-blur-sm rounded-tr-lg pointer-events-none">
+                        <span className="opacity-75 text-[10px] uppercase tracking-wider mr-1">By</span>
+                        <span className="font-medium">{author}</span>
+                    </div>
+                )}
+            </div>
+            <ImageModal 
+                isOpen={isExpanded}
+                onClose={handleClose}
                 src={src}
                 alt={alt}
-                width={width || 800}
-                height={height || 600}
-                className={`${className} ${canExpand ? 'cursor-pointer' : ''}`}
-                priority={eager}
-                sizes={sizes}
-                onClick={handleClick}
+                width={width}
+                height={height}
+                about={about}
+                author={author}
+                expand={expand}
+                layoutId={layoutId}
             />
-            {expandedModal}
         </>
     );
 }

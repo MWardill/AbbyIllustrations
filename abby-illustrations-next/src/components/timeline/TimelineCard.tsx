@@ -54,21 +54,25 @@ export default function TimelineCard({ images, title, children, objectPosition =
                 className="relative overflow-hidden"
                 style={{ aspectRatio: aspectRatio ?? 4 / 3 }}
             >
-                {images.map((image, index) => (
-                    <div
-                        key={index}
-                        className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${
-                            index === currentIndex ? 'opacity-100' : 'opacity-0 pointer-events-none'
-                        }`}
-                    >
-                        <Image
-                            src={image.src}
-                            alt={image.alt}
-                            className={`w-full h-full object-cover ${objectPositionClass}`}
-                            expand
-                        />
-                    </div>
-                ))}
+                <div
+                    className="flex h-full transition-transform duration-500 ease-in-out"
+                    style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+                >
+                    {images.map((image, index) => (
+                        <div
+                            key={index}
+                            className="w-full shrink-0 grow-0"
+                        >
+                            <Image
+                                src={image.src}
+                                alt={image.alt}
+                                className={`w-full h-full object-cover ${objectPositionClass}`}
+                                expand
+                                disableSharedLayoutAnimation
+                            />
+                        </div>
+                    ))}
+                </div>
                 {images.length > 1 && (
                     <>
                         <button

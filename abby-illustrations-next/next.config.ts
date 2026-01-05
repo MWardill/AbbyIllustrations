@@ -13,6 +13,11 @@ const nextConfig: NextConfig = {
       new URL('https://7ec1rjem3s1walis.public.blob.vercel-storage.com/**'),
     ],
   },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '2mb',
+    }
+  }
 };
 
 export default nextConfig;

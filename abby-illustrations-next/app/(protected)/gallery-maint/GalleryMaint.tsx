@@ -13,6 +13,7 @@ export default function GalleryMaint({ initialGalleries }: { initialGalleries: G
     const [showModal, setShowModal] = useState(false);    
     const [showDeleteConfirm, setShowDeleteConfirm] = useState({show: false, description: ""});
     const [deleteGalleryId, setDeleteGalleryId] = useState<number | null>(null);
+    const [selectedGallery, setSelectedGallery] = useState<Gallery | null>(null);
     const router = useRouter();
         
     const handleDeleteGallery = async (galleryId: number, galleryDesc: string) => {
@@ -36,6 +37,16 @@ export default function GalleryMaint({ initialGalleries }: { initialGalleries: G
         setDeleteGalleryId(null);
     };
 
+    const handleEditDetails = (gallery: Gallery) => {
+        setSelectedGallery(gallery);
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setSelectedGallery(null);
+    };
+
     return (
         <>
             <div className="p-8">
@@ -52,15 +63,17 @@ export default function GalleryMaint({ initialGalleries }: { initialGalleries: G
                 <GalleryTable
                     galleries={initialGalleries}
                     onEdit={(id) => { router.push(`/image-maint/${id}`); }}
+                    onEditDetails={handleEditDetails}
                     onDelete={handleDeleteGallery}
                 />
             </div>
 
             <GalleryModal
                 isOpen={showModal}
-                onClose={() => setShowModal(false)}
+                onClose={handleCloseModal}
+                gallery={selectedGallery}
                 onSuccess={async () => {    
-                    toast.success("Gallery created successfully");                
+                    toast.success(selectedGallery ? "Gallery updated successfully" : "Gallery created successfully");                
                     router.refresh();
                 }}
             />
