@@ -1,11 +1,14 @@
 'use client';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import NextImage from 'next/image';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 
 const ImageModal = dynamic(() => import('./ImageModal'), { ssr: false });
+
+// Preload function - calling import() again returns the cached promise if already loaded
+const preloadImageModal = () => import('./ImageModal');
 
 interface ImageProps {
     src: string;
@@ -48,6 +51,16 @@ export default function Image({
         ? `${pathname}-image-${src}`
         : undefined;
 
+    // Preload modal component and image on hover so animation is smooth on first click
+    const handleMouseEnter = useCallback(() => {
+        if (expand) {
+            preloadImageModal();
+            // Also preload the image at full size
+            const img = new window.Image();
+            img.src = src;
+        }
+    }, [expand, src]);
+
     const handleClick = () => {
         if (expand) {
             setIsExpanded(true);
@@ -63,7 +76,7 @@ export default function Image({
 
     return (
         <>
-            <div className="relative w-full h-full">
+            <div className="relative w-full h-full" onMouseEnter={handleMouseEnter}>
                 <motion.div 
                     layoutId={layoutId}
                     className="w-full h-full"
