@@ -39,6 +39,9 @@ export default function ImageModal({
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
+    // Don't render portal on server - prevents Safari crash
+    if (typeof document === 'undefined') return null;
+
     return createPortal(
         <AnimatePresence>
             {isOpen && (
